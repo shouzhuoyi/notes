@@ -1,0 +1,91 @@
+\documentclass{homework}
+\usepackage{amsmath}
+\usepackage{ctex}
+\author{易守拙\ 2024300001103}
+\class{计算理论导引}
+\date{\today}
+\title{计算理论导引第三周作业}
+\address{使用了这个模版:\url{https://github.com/simurgh9/hw}}
+
+\graphicspath{{./media/}}
+
+\begin{document} \maketitle
+	
+	\question \textbf{利用分配律 $x \land (y \lor z) = (x \land y) \lor (x \land z)$ 和 $x \lor (y \land z) = (x \lor y) \land (x \lor z)$，是否可在多项式时间内将合（析）取范式转换成析（合）取范式？}
+	
+	\begin{sol}
+	不行.考虑$$ \phi = (x_{11} \lor x_{12}) \land (x_{21} \lor x_{22}) \land \dots
+	\land (x_{n1} \lor x_{n2}) $$
+	我们期望把$\phi$化成如下的情形:
+	$$ (x_{11} \land x_{21} \land \dots \land x_{n1}) \lor (x_{12}
+	\land x_{21} \land \dots \land x_{n1}) \lor \dots \lor (x_{12} \land
+	x_{22} \land \dots \land x_{n2}) $$
+	但这个操作只能通过分配律进行.时间复杂度是 $O(n \cdot2^n)$,它不在$\textbf{P}$内.反过来也是一样的.
+		
+	\end{sol}
+	\question \textbf{证明 $\textbf{EXP}^{\textbf{EXP}} = \textbf{2-EXP}$.}
+	
+	\begin{sol}
+		我们来分别证明, $\textbf{EXP}^{\textbf{EXP}} \subseteq \textbf{2-EXP} $和,$\textbf{EXP}^{\textbf{EXP}} \supseteq \textbf{2-EXP}$.
+		
+		$\forall x \in \textbf{EXP} , \exists c \in \N , x \in \textbf{TIME}(2^{n^c}). $那么,$\forall x \in \textbf{EXP}^{\textbf{EXP}} , \exists y,z \in \textbf{EXP}, x  = y^z.$我们只考察$\textbf{TIME}$后对应的正整数$c$,即$y,z$对应的$y_c,z_c$;此时,$$x \in \textbf{TIME}((2^{n^{c_y}})^{(2^{n^{c_z}})}) =  \textbf{TIME}(2^{n^{c_y} \cdot 2^{n^{c_z}}})  \textbf{TIME}(2^{2^{\log(n)c_y+n^{c_z}}})
+		$$.由于$\log(n)c_y+n^{c_z} = O(n^{C})$,我们知道$x \in   \textbf{2-EXP}$.反过来的情况类似,把过程倒过来思考即可.
+		
+	\end{sol}
+	
+	\question \textbf{证明 $\textbf{2SAT} \in \textbf{P}$.}
+	
+	\begin{sol}
+		由于 $(a \lor b) \iff (\neg a \longrightarrow b) \land (\neg b \longrightarrow a)$,我们把一个$\textbf{2SAT}$公式和这样的图对应起来:
+		\begin{itemize}
+					\item 一个变元$x_i$对应图里的两个点,一个代表 $x_i$,另一个代表 $\neg x_i$;
+					\item 对公式中 $(a \lor b)$,添加两条有向边: $\neg a$ 指向 $b$, $\neg b$ 指向 $a$;
+					\item 该公式是不可满足的,当且仅当在蕴含图中,存在某个变量$x_i$使得顶点 $x_i$ 和顶点 $\neg x_i$ 位于同一个强连通分量中.
+		\end{itemize}
+		
+		我们可以借助Tarjan等搜索算法来爆搜这个图中的强连通分量,时间复杂度在$O(n)$.所以我们证明了命题.
+
+		
+		
+	\end{sol}
+	
+	\question \textbf{写一段对数空间程序,解决 \texttt{MULP}.它定义为\[
+		\texttt{MULP} \overset{\text{def}}{=} \{ (a, b, c) \mid a, b, c \text{ 为二进制数，且 } a \cdot b = c \}
+		\]}
+	
+	
+	\begin{sol}
+
+	这个程序来模拟 $a$ 与 $b$的每一位（$b_i$）相乘然后将这些中间结果相加的过程.
+	\begin{itemize}
+		\item 在一个带子上存一个进位值$carry$,和当前计算位数$j$;
+		
+		\item 让$j$ 从 0 循环到 $a$ 和 $b$的长度之和.在每次循环中,再循环$b$的每一位,如果$i$位是1,就读取$a$的$j-i$位把他们的乘积结果加到结果中,从而计算列总和.如果 这个结果$result \% 2 \neq c_j$，则 $a \cdot b \neq c$,立即停机并拒绝.如果相等, 更新进位,进入下一个循环.
+		\item 如果循环正常结束,检查最终的 carry 是否为 0.是0就接受,反之拒绝.
+
+		输入 $(a, b, c)$ 存储在只读的输入带上. j 的最大值是输入长度，需要 $O(\log n)$
+		空间;carry在最坏情况下,进位的值不会超过 $b$
+		的长度.需要 $O(\log n)$ 空间。
+
+		总工作空间为 $O(\log n)$，因此这是一个对数空间算法.
+	\end{itemize}
+	。
+	\end{sol}
+	\question \textbf{证明空间压缩定理:设图灵机 $M$ 在 $S(n)$ 空间判定 $L$。对任意 $\epsilon > 0$，存在图灵机 $M'$，$M'$ 能在 $\epsilon S(n) + 1$ 空间内判定 $L$。}
+	
+	\begin{sol}
+		我们的核心思想是构造一个新的图灵机
+		$\mathbb{M}'$，它使用一个更大的带字母表来“压缩”原图灵机 $\mathbb{M}$ 的工作带。
+		
+		设 $\mathbb{M}= (Q, \Sigma, \Gamma)$ 是在
+		$S(n)$ 空间内判定 $L$ 的图灵机,我们构造这样的$\mathbb{M}'$:
+		$\mathbb{M}'$ 的工作带字母表  $\Gamma' =
+		\Gamma^k$,状态是一个元组 $(q, j)$,其中 $q \in Q$ 是 $\mathbb{M}$ 的当前状态,$j \in \{1, 2, \dots, k\}$ 是 $\mathbb{M}$ 的读写头在其所处的$k$-符号块中的相对位置.类似于时间的线性加速定理,我们知道$\mathbb{M'}$可以模拟操作,并且空间复杂度是
+	 $$ S'(n) = \lceil S(n)/k \rceil \le \frac{S(n)}{k} + 1 $$
+	 
+	取 $k \ge 1/\epsilon$即证.
+	
+		
+	\end{sol}
+	
+\end{document}
