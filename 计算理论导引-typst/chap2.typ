@@ -115,7 +115,7 @@ nobody cares.
 
 
 == Logspace Reduction
-即使你不直接算出整个 $f(x)$，只要你能“按需访问”它的每一位，并且只用很少的空间（对数空间），那这个函数就算‘隐式对数空间可计算’。
+即使你不直接算出整个 $f(x)$，只要你能“按需访问”它的每一位，并且只用很少的空间（对数空间），那这个函数就算‘隐式对数空间可计算’。<label:logspace-reduction>
 #definition[
   称$f$为隐式对数空间可计算的,如果他满足:
   
@@ -133,5 +133,68 @@ nobody cares.
 
 
 #definition[
-  这里应该有一个归约的定义
+  可计算全函数$f:{0,1}^* arrow.r {0,1}^*$是问题A到问题B的*m-归约*，记为$A lt.eq.slant_m B$，若满足：对任意0-1串x]
+
+我们称$B$是对数空间规约到$C$的,当且仅当隐式空间可计算的B到C的规约.记作$lt.eq.slant_L$.
+
+自然想讨论$lt.eq.slant_L $的结合律.答案是肯定的.
+#theorem[
+  $lt.eq.slant _L$是结合的.
 ]
+#figure(image("9ed3534a619618e298d4a93523973690.jpeg"),caption:[
+派YYL来做这个漂亮的手写图
+])
+#proof[
+  我们维护一个对数长的计数器,来看 $g$ 在处理 $f(x)$ 的哪一位.这是因为,图灵机在模拟 $g$ 的时候,不需要记录 $f(x)$ 的每一位,而只关心读写头到了哪里.我们可以视作 $f(x)$ 被记录在了一个虚拟带中,靠这个计数器来模拟读写头的读写.
+
+ 当 g 运行时，它的读写头会在虚拟带上移动。我们需要知道：g 的读写头当前在虚拟带的哪个位置？这个位置可以用一个计数器来记录。因为 f(x) 的长度是 $O(n^c)$（多项式），所以计数器只需要 $O(log n) $位。维护一个计数器 pos，表示 g 的读写头当前在虚拟带（即 $f(x)$）的哪个位置。初始时，pos = 0。每次 g 需要读取虚拟带的 pos 位时，调用 f 的“按需访问”功能，计算$f(x)_("pos")$。这可以在 $O(log n)$ 空间内完成（因为 f 是隐式对数空间可计算的）。每次 g 移动读写头（左移或右移），我们就更新 pos。
+]
+#line()
+
+事实上,我们可以更直观的定义函数规约.以下的定义和1.4.1*等价*.
+#definition[
+  称$f:{0,1}^* arrow.r {0,1}^*$是*对数空间可计算的*,iff,$MM_f$使用了工作带上的对数个格子,并且他的输出带是只写的:也就是说,输出带的读写头每写一次都必须往右移一位.
+]
+tmd为什么书上不证明这两个定义是等价的?
+
+== Space Completeness
+#quote[
+  ...*PSPACE*-难的问题是对人类计算能力的极限挑战;我们已经无奈地接受了一个事实,就是人类是完全打不过多项式空间图灵机的.
+]
+
+我们来考察一些问题的困难性.
+#definition[称$A$是*X-难*的,iff, $forall A in XX, A lt.eq.slant_X B$.如果$A in X$,那么$A$是*X-完全*的.]
+
+例如：A language $L'$ is PSPACE-hard if $L≤_L L'$ for every $L in P S P A C E$.
+If in addition $L' in P S P A C E$ then $L'$ is PSPACE-complete.
+
+PSPACE 中的每一个问题 L，都可以用对数空间归约到 L'。也就是说，L' 至少和 PSPACE 中最难的问题一样难。但L' 本身不一定在 PSPACE 中！
+
+
+ QBF之前已经写过.我们来考察这一个不错的结果.
+ #theorem[
+  QBF 是 *PSPACE*-完全的。(*Stockmeyer-Meyer 1974*)
+  
+  QBF: $Q_1 x_1 Q_2 x_2 . . . Q_n x_n . φ(x_1, . . . , x_n)$，其中$Q_i$是$forall$或者$exists$。
+ ]
+ #proof[
+  先来看一个引理.
+  #lemma[
+   `QBF`可在线性空间内判定.
+    #line()
+    #proof[
+      把$psi = Q_1x_1...Q_n x_n phi(x_1, ..., x_n)$化成如下所示的二叉树:
+      #figure(align(center,image("image.png",height:25%,)))
+      然后,对其利用dfs,得到一个指派,然后再线性空间里计算$psi$的值.
+    ]
+  
+  ]
+  回到原定理.我们只需证$forall L in bold(L)$,$x in {0,1}^*,MM$在$S(abs(x))$空间里判定$L$.我们的想法是,把格局图中$C_("start") -> C_("accept")$的路径用QBF表示.我们归纳的构造这样的QBF.
+  
+  我们令$psi_i(C,C')$判定是否有路径从$C$到$C'$,并且长度不超过$2^i$.
+  $
+    psi_i (C,C') = (exists F forall D^1 forall D^2 ((D^1 = C and D^2 =  F) or (D^1 =  F and D^2 = C')) ==>psi_(i-1)(D^1,D^2))
+  $
+  上面一个公式的意思是:找一个中间量F,让我们能够递归的调用$psi_(i-1)$.写得这么丑陋完全是因为要让他有QBF的形式.如果$D^1,D^2$不是$C,C',F$之一,上述式子一定真,因为前提是假的;当它们落进去了,就得递归的判断了.
+  来估算$abs(psi_i).$不难看出$abs(psi_i) = abs(psi_(i-1)) + O(S(abs(x)))$.所以$abs(psi_x) = O(S(abs(x))^2)$.所以我们定义了一个规约.
+ ]
