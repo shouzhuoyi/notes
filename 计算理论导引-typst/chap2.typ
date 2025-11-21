@@ -18,7 +18,7 @@
 
 #set line(length: 100%,stroke: 0.1pt)
 
-
+#set math.equation(numbering: "(1)", supplement: [  公式:  ])
 
 = Space Complexity
 可重用导致了空间复杂性的研究非常*风格迥异*.
@@ -165,36 +165,96 @@ tmd为什么书上不证明这两个定义是等价的?
 我们来考察一些问题的困难性.
 #definition[称$A$是*X-难*的,iff, $forall A in XX, A lt.eq.slant_X B$.如果$A in X$,那么$A$是*X-完全*的.]
 
-例如：A language $L'$ is PSPACE-hard if $L≤_L L'$ for every $L in P S P A C E$.
-If in addition $L' in P S P A C E$ then $L'$ is PSPACE-complete.
+例如：A language $L'$ is PSPACE-hard if $L≤_L L'$ for every $L in bold("PSPACE")$.
+
+If in addition $L' in bold("PSPACE")$ then $L'$ is *PSPACE*-complete.
 
 PSPACE 中的每一个问题 L，都可以用对数空间归约到 L'。也就是说，L' 至少和 PSPACE 中最难的问题一样难。但L' 本身不一定在 PSPACE 中！
 
 
- QBF之前已经写过.我们来考察这一个不错的结果.
- #theorem[
+QBF之前已经写过.我们来考察这一个不错的结果.
+#theorem[
   QBF 是 *PSPACE*-完全的。(*Stockmeyer-Meyer 1974*)
-  
+
   QBF: $Q_1 x_1 Q_2 x_2 . . . Q_n x_n . φ(x_1, . . . , x_n)$，其中$Q_i$是$forall$或者$exists$。
- ]
- #proof[
-  先来看一个引理.
-  #lemma[
-   `QBF`可在线性空间内判定.
-    #line()
-    #proof[
-      把$psi = Q_1x_1...Q_n x_n phi(x_1, ..., x_n)$化成如下所示的二叉树:
-      #figure(align(center,image("image.png",height:25%,)))
-      然后,对其利用dfs,得到一个指派,然后再线性空间里计算$psi$的值.
-    ]
-  
   ]
-  回到原定理.我们只需证$forall L in bold(L)$,$x in {0,1}^*,MM$在$S(abs(x))$空间里判定$L$.我们的想法是,把格局图中$C_("start") -> C_("accept")$的路径用QBF表示.我们归纳的构造这样的QBF.
-  
-  我们令$psi_i(C,C')$判定是否有路径从$C$到$C'$,并且长度不超过$2^i$.
-  $
-    psi_i (C,C') = (exists F forall D^1 forall D^2 ((D^1 = C and D^2 =  F) or (D^1 =  F and D^2 = C')) ==>psi_(i-1)(D^1,D^2))
-  $
-  上面一个公式的意思是:找一个中间量F,让我们能够递归的调用$psi_(i-1)$.写得这么丑陋完全是因为要让他有QBF的形式.如果$D^1,D^2$不是$C,C',F$之一,上述式子一定真,因为前提是假的;当它们落进去了,就得递归的判断了.
-  来估算$abs(psi_i).$不难看出$abs(psi_i) = abs(psi_(i-1)) + O(S(abs(x)))$.所以$abs(psi_x) = O(S(abs(x))^2)$.所以我们定义了一个规约.
- ]
+#proof[
+先来看一个引理.
+#lemma[
+  `QBF`可在线性空间内判定.
+  #line()
+  #proof[
+    把$psi = Q_1x_1...Q_n x_n phi(x_1, ..., x_n)$化成如下所示的二叉树:
+    #figure(align(center,image("image.png",height:25%,)))
+    然后,对其利用dfs,得到一个指派,然后再线性空间里计算$psi$的值.
+  ]
+
+]
+回到原定理.我们只需证$forall L in bold(L)$,$x in {0,1}^*,MM$在$S(abs(x))$空间里判定$L$.我们的想法是,把格局图中$C_("start") -> C_("accept")$的路径用QBF表示.我们归纳的构造这样的QBF.
+
+我们令$psi_i (C,C')$判定是否有路径从$C$到$C'$,并且长度不超过$2^i$.所以$psi_i (C,C')$的逻辑结构如下:
+$
+  &(exists F forall D^1 forall D^2 ((D^1 = C and D^2 =  F) or (D^1 =  F and D^2 = C')) ==>psi_(i-1)(D^1,D^2))
+$<yes>
+上面一个公式的意思是:想找一个中间量F,让我们能够递归的调用$psi_(i-1)$.写得这么丑陋完全是因为要让他有QBF的形式.如果$D^1,D^2$不是$C,C',F$之一,上述式子一定真,因为前提是假的;当它们落进去了,就得递归的判断了.
+来估算$abs(psi_i).$不难看出$abs(psi_i) = abs(psi_(i-1)) + O(S(abs(x)))$.所以$abs(psi_x) = O(S(abs(x))^2)$.所以我们定义了一个规约.
+]
+
+#remark[
+
+1. Why $abs(psi_i) = abs(psi_(i-1)) + O(S(abs(x)))$? 这是因为,@yes 的式子中,我们得利用蕴含恒等式去计算.蕴含的前面有四个等号,我们通过暴力枚举每个点来判断等号是否成立,这是 $O(S(abs(x)))$的.
+2. 我们可以把一个QBF看成一个博弈游戏,A先玩,B后玩.那么QBF表示的意思自然就是A是否有获胜策略.上面这个式子就证明了,判断博弈游戏里一个人是否有获胜策略是*PSPACE*-完全的.
+
+]
+
+我们可以把定理的证明思路归纳成:利用$NN$的猜测能力来解决$exists$,用计数器的枚举能力解决$forall$.下面这个定理给出了类似的思想.
+#theorem("Savitch Theorem")[
+如果$S$是空间可构造的,那么,$bold("NSPACE")(S(n)) subset.eq bold("SPACE")(S(n)^2)$.
+]
+#proof[
+#figure(align(image("image-1.png", width:70%),center),caption:[
+  证明的图
+])
+格局$C_1$能否在$t$步内到达$C_2$被视为一个函数：$g(C_1,C_2,t)$。显然
+$g(A, B, t) eq exists M (g(A, M, t/2) and g(M, B, t/2)$
+
+$S(n)$ (空间项)：在这个递归公式中，$S(n)$ 代表存储一个格局（Configuration $C$）所需的空间大小。
+]
+
+这个定理的推论是重要的:$bold("PSPACE") = bold("NPSPACE").$左边包含右边是显然的.右边包含左边利用定义证明.注意到$bold("NSPACE")(p^n) subset.eq bold("SPACE")(p^(2n)) ,forall p in "poly" $.
+== NL完全性
+#definition[
+称$B$是*NL-完全*的,iff, $forall A in bold("NL"), A lt.eq.slant_L B$.
+
+]
+我们可以看到一个很惊讶的结果:如果$A in bold("NL")$,那么$A$是*NL-完全*的.
+我们通过证明`PATH`是*NL*-完全的来证明这个结果.
+
+#theorem[
+`PATH` 是 *NL*-完全的。(*Karp 1972*)
+]
+#proof[
+记$L in bold("NL").$我们来证明$L lt.eq.slant_L "PATH"$.定义规约$kai: x |-> ⟨ G_(NN,x),C_("start"),C_("accept") ⟩ .$注意,我们可以用邻接矩阵储存$G,G$的每一个元素都可以在对数空间内计算得到.
+所以$kai$是对数规约.得证.
+]
+
+== Immerman-Szelepcsenyi Theorem
+在Savitch Theorem中,我们证明*CONPSPACE = NPSPACE*.但是,*coNL*和*NL*无法判断.
+
+但是,Immerman提出了,`PATH`的补问题：
+#theorem[
+#overline("PATH")$in bold("NL")$.
+]
+#proof[
+ 用bfs.记s为起点,t为终点.我们引入集合$C_i,c_i$,$C_i$是所有能从$s$在$i$步内到达的点的集合,$c_i = abs(C_i).$
+我们可以把一些(有限个)$c_i$放到带子上,但是我们不能存哪怕任何一个$C_i$.
+具体的算法如下.
+
+1. 记$c_i = 0 , i = 1,dots,n$;
+2. 计算$c_1$;
+3. 从$c_i -> c_(i+1)$.计算过程如下:
+ - 不考虑时间,我们可以先*猜测*$C_i (eq.delta  hat(C)_i)$.首先,它之中的每个元素都和s的距离不超过i.我们用`PATH`验证.
+ - 假设`PATH`验证通过.我们还需要$abs(hat(C)_i) = c_i$.这通过维护计数器可以做到.
+ - 接着用bfs,我们可以做到$hat(C)_i -> C_(i+1)$.
+4.判定t是否在可能的$C_i$里.为此,再*猜测*一次即可.
+]
