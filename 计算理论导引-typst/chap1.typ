@@ -42,7 +42,7 @@
   This course is about _classifying and comparing_ problems by the amount of resource
   necessary to solve them.
 ]
-#denote[
+#remark[
   + 有限状态集$Q$ 是机器所有可能"心理状态"的集合，比如"正在读输入""正在计算""准备输出"等。
     - 必须包含:$q_(s t a r t)$开始状态，机器一启动就处于这个状态；$q_(h a l t)$停机状态，一旦进入这个状态，机器就停止运行，不再执行任何操作。\
     - 你可以在$Gamma,Q$中自己定义别的奇妙的符号,但必须包含以上特别指出的符号.
