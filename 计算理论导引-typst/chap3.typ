@@ -224,7 +224,7 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
   Berman-Hartmanis猜测$==> bold(P) eq.not bold("NP")$.
 ]
 #proof[
-  对语言$S subset.eq {0,1}^star , S^(lt.slant n)$表示S中所有长度不超过n的串的集合.我们称S是*稠密的*,若$abs(S^(lt.slant n)) = 2^n^(O(1))$;S是*稀疏的*,若$abs(S^(lt.slant n)) = n^(O(1))$.
+  对语言$S subset.eq {0,1}^star , S^(lt.slant n)$表示S中所有长度不超过n的串的集合.我们称S是*稠密的*,iff,$abs(S^(lt.slant n)) = 2^n^(O(1))$;S是*稀疏的*,iff,$abs(S^(lt.slant n)) = n^(O(1))$.
 
 
   #lemma[
@@ -233,7 +233,6 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
     #proof[
       反证,设$r$是双射卡普规约并且在多项式时间($p(n)$)计算$L --> L'$.则$r(L(n)) subset.eq L'^(lt.slant p(n))$.但是$L$稠密,所以$abs(L'^(lt.slant p(n))) = 2^(O(p(n)))$.所以$L'^(lt.slant p(n))$是稠密的,矛盾.
     ]
-
 
   ]
 
@@ -244,12 +243,13 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
 #remark[
   1. recall that $bold("NPC")$ 是#np()完全的问题构成的集合,而Karp规约是构造一个时间可计算函数把一个问题打到另一个问题上.
   2. Why `SAT` is dense? 考察$ phi.alt = (x_1 or x_2 or x_3 ) or.big_(i) C_i $.其中,$x_i$让$phi.alt$变得恒真,然后我们随便选$C_i$使得$abs(phi.alt) = n$.这至少是$2^n$的.
+  3. $bold("NPC")$的意思是$bold("NP")$-完全问题。
 
 ]
 
 == Ladner定理
 
-令人不禁想问,#np()\\#p()里面有其他问题吗?Ladner定力证明了,#np()$eq.not$#p()时,#np()\\#p()里面*恰好*有无穷个其他问题.接下来考察一个弱化的版本.
+令人不禁想问(其实只有傅和甘想问),#np()\\#p()里面有其他问题吗?Ladner定理证明了,#np()$eq.not$#p()时,#np()\\#p()里面*恰好*有无穷个其他问题.接下来考察一个弱化的版本.
 
 #theorem[
   若#np()$eq.not$#p(),$bold("NPC") ∪ bold(P) eq.not np()$.

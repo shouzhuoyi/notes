@@ -270,7 +270,7 @@ QBF之前已经写过.我们来考察这一个不错的结果.
 在Savitch Theorem中,我们证明*CONPSPACE = NPSPACE*.但是,*coNL*和*NL*无法判断.
 
 但是,Immerman提出了,`PATH`的补问题：
-#theorem[
+#theorem("Immerman-Szelepcsenyi Theorem")[
   #overline("PATH")$in bold("NL")$.
 ]
 #proof[
@@ -285,4 +285,28 @@ QBF之前已经写过.我们来考察这一个不错的结果.
     - 若`PATH`验证通过，则还需要$abs(hat(C)_i) = c_i$.这通过维护计数器可以做到.
     - 如果以上两步都通过，则可以认为$hat(C)_i$是确凿无疑的了。接着用bfs,我们可以做到$hat(C)_i -> c_(i+1)$(也就是数出个数).
   4.判定t是否在可能的$C_i$里.为此,再*猜测*一次即可.
+]
+#let nl() = $bold("NL")$
+#corollary[
+  $text("co")bold("NL")=bold("NL")$.
+]
+#proof[
+  PATH是 #nl()-完全的，所以#overline("PATH")是co#nl()-完全的。又由$#overline("PATH") in nl()$，有$text("co")#nl() #sym.subset.eq #nl()$。再由补问题的定义，得证。
+]
+
+
+#theorem[
+  `2SAT` 是#nl()完全的.
+]
+#proof[
+  对k个变量,构造2k个点$x_1,dots,x_k,overline(x_1),dots,overline(x_k)$.把边$overline(u) --> v,overline(v)--> u  <==> u or v$,如果$u or v in phi$.证明:$phi$不可满足当且仅当$v ,overline(v)$是通路.
+  #line()
+  必要性似乎很显然.充分性:
+  1. 假定不存在$v,overline(v)$的通路.我们对没有赋值的$v,forall w s.t.v-->w$,给$w$赋值为真,$overline(w)$赋值为假.这样归纳的我们找到了真值指派,矛盾.
+  
+  
+]
+
+#theorem[
+  #mitex(`L \subseteq \textbf{NL} \subseteq \textbf{P} \subseteq \textbf{NP} \subseteq \textbf{PSPACE} \subseteq \textbf{EXP}.`)
 ]
