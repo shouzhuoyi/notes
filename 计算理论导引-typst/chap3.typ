@@ -260,15 +260,15 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
   #line()
   利用填充技术,将$phi.alt <==> phi.alt and n_1 and dots and n_h$,这里的等价符号的意思是可满足的等价性.用二进制,就表示为$phi.alt 01^h$.
 
-  容易验证,${phi.alt 01^(abs(phi.alt)^c)| phi.alt in "SAT"}$是#np()完全的,而${phi.alt 01^(2^abs(phi.alt))| phi.alt in "SAT"}$是#p()的.
+  容易验证,${phi.alt 01^(abs(phi.alt)^c)| phi.alt in "SAT"}$是#np()完全的,而${phi.alt 01^(2^abs(phi.alt))| phi.alt in "SAT"}$是#p()的（直接暴力枚举所有变元的值即可）.
 
-  记$ "SAT"_H = {phi.alt 01^(abs(phi.alt)^(H(abs(phi.alt))))| phi.alt in "SAT"} $,并定义示性函数$"SAT"_H (x)$.
+  记$ "SAT"_H = {phi.alt 01^(abs(phi.alt)^(H(abs(phi.alt))))| phi.alt in "SAT"} $并定义示性函数$"SAT"_H (x)$.
 
   我们如何做$H$?来做对角线法.对角化思想:如果某个算法想“猜中”$"SAT"_H$，我们就改变$"SAT"_H$的结构，让它失败。
 
   $
     H(n) = cases(
-      1","quad & i<log(log(n)) and (forall x,MM_i(x)"在"i abs(x)^i"步内输出""SAT"_H (x)),
+      i","quad & i<log(log(n)) and (forall x,MM_i (x)"在"i abs(x)^i"步内输出""SAT"_H (x)),
       log(log(n)) "," quad & "else"
     )
   $
