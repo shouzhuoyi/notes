@@ -249,7 +249,7 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
 
 == Ladner定理
 
-令人不禁想问,#np()\\#p()里面有其他问题吗?Ladner定力证明了,#np()$eq.not$#p()时,#np()\#p()里面*恰好*有无穷个其他问题.接下来考察一个弱化的版本.
+令人不禁想问,#np()\\#p()里面有其他问题吗?Ladner定力证明了,#np()$eq.not$#p()时,#np()\\#p()里面*恰好*有无穷个其他问题.接下来考察一个弱化的版本.
 
 #theorem[
   若#np()$eq.not$#p(),$bold("NPC") ∪ bold(P) eq.not np()$.
@@ -281,8 +281,20 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
     所以,$     & T(n) lt.slant (log log (n))O(n)(o(n)+O(n)+T(log(n))+O(1)) \
     ==> & T(n) = o(n^3). $
     #line()
-    来完成定理的证明.我累了,上课再写.
+    事实上,$H(NN)$是无限的.为什么?反证法.
 
+    假设$"SAT"_H$$in$#p(),则存在$MM_i$在$c n^c$时间内计算$"SAT"_H$. 则对充分大的$n$,$H(n) lt.slant i$.又$H$不递减,说明$exists n_0 , forall n > n_0 , H(n) = D$为常数.这意味着$"SAT" lt.slant_K "SAT"_H$,这说明$"SAT"$$in$#p(),进而#p()$eq$#np(),矛盾.(YYL好好思考为什么这里是进而)
+    #line()
+    来反证的证明$"SAT"_H in.not bold("NPC")$.若$"SAT"_H in bold("NPC")$,则存在一个在$d n^d$时间内计算的规约$r: "SAT"|-> "SAT"_H$.由上述,$exists N , abs(psi)>d and$
+    $ abs(r(phi)) = abs(psi 01^(abs(psi)^(H(abs(psi))))) >N $,可得到$H(abs(psi)) > 2d+1$.
+    则$     & abs(psi)^(2d+1) < abs(psi)^(H(abs(psi)))<abs(r(phi)) lt.slant d abs(phi)^d < abs(psi) abs(phi)^d \
+    ==> & abs(psi) < sqrt(abs(phi)). $
 
+    所以,我们构造$"Sat"(phi)$算法如下:
+    1. 计算$abs(phi)$为$psi 01^(abs(psi)^(H(abs(psi))))$形式;
+    2. 若$r(phi)>N$,递归$"Sat"(psi)$;
+    3. 否则,直接算.
+
+    设调用了k次,则$1 lt.slant abs(phi)^(2^(-k)) lt.slant N$.则$k lt.slant log(log(abs(phi)))$.所以多项式时间可计算,$"SAT"_H in$#p(). 这又是一个矛盾.
 ]
 

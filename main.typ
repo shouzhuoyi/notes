@@ -26,7 +26,7 @@
   }
   it
 }
-
+#let fake-italic(body) = box(text([#skew(ax: -12deg) [#body]]))
 #set math.equation(numbering: "(1)", supplement: [公式])
 
 #include "计算理论导引-typst/chap1.typ"
