@@ -274,18 +274,36 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
   $
   如果存在这样的 $i$，则令$H(n)=i$，这意味着我们发现了一个可能的 #p() 算法(在小输入上表现良好).于是我们“惩罚”它：把$H(n)$ 设为 $i$,从而让填充量变小(因为$i$很小),使得$"SAT"_H$更难,破坏这个算法的正确性.如果没发现,我们就往上跳.
 
-  $H(n)$不会突然下降.下面来证明$"SAT"_H$是#p()的.
-  计算步骤就和定义一样,枚举i,然后枚举*确定*的通用图灵机$MM_i$然后模拟那么多步计算.
-  1. 模拟时间为$c(log(log(log(n))))C log C,C = log(log(n))(log(n))^(log(log(n)))$(这tm啥??).带入之前的可得到时间是$o(n)$的.这是因为下标小于$log(log(n))$的自然数的二进制长度不会超过三个log.
-  2. 判定$x in "SAT"_H$的时间是$O(n)$的.暴力.
-    所以,$     & T(n) lt.slant (log log (n))O(n)(o(n)+O(n)+T(log(n))+O(1)) \
-    ==> & T(n) = o(n^3). $
-    #line()
-    事实上,$H(NN)$是无限的.为什么?反证法.
+  $H(n)$有两个性质：
 
-    假设$"SAT"_H$$in$#p(),则存在$MM_i$在$c n^c$时间内计算$"SAT"_H$. 则对充分大的$n$,$H(n) lt.slant i$.又$H$不递减,说明$exists n_0 , forall n > n_0 , H(n) = D$为常数.这意味着$"SAT" lt.slant_K "SAT"_H$,这说明$"SAT"$$in$#p(),进而#p()$eq$#np(),矛盾.(YYL好好思考为什么这里是进而)
+  1. $H(n)$是非递减函数。
+  
+  2. $H$可在多项式时间内计算。
+  
+    计算步骤就和定义一样,枚举i,然后枚举*确定*的通用图灵机$MM_i$然后模拟那么多步计算.
+    - 根据通用图灵机的定义，模拟*一个图灵机在一个输入$x$上*时间为$c(log(log(log(n))))C log C,C = log(log(n))(log(n))^(log(log(n)))$(这是$i|x|^i$直接代入的结果).
+    
+    带入之前的可得到$c(log(log(log(n))))C log C$是$o(n)$的，这是因为下标小于$log(log(n))$的自然数的二进制长度不会超过三个log。
+    - 我们最多需要检查 $log log n$ 个图灵机，每个图灵机要检查所有满足$|x| <= log(n)$的|x|，这样的$x$有$2^ log(n) = O(n)$个(外面的$O(n)$)。
+    
+      使用暴力算法，
+      判定$x in "SAT"_H$的时间是$2^ log(n) = O(n)$的(括号里面的那个$O(n)$).
+      所以,$     & T(n) lt.slant (log log (n))O(n)(o(n)+O(n)+T(log(n))+O(1)) \
+      ==> & T(n) = o(n^3). $
+
+
     #line()
-    来反证的证明$"SAT"_H in.not bold("NPC")$.若$"SAT"_H in bold("NPC")$,则存在一个在$d n^d$时间内计算的规约$r: "SAT"|-> "SAT"_H$.由上述,$exists N , abs(psi)>d and$
+    现在来用反证法证明$"SAT"_H in.not #p()$。
+
+
+    假设$"SAT"_H$$in$#p(),则存在$MM_i$在$c n^c$时间内计算$"SAT"_H$。则对充分大的$n$,$H(n) lt.slant i$。又$H$不递减，说明$exists n_0 , forall n > n_0 , H(n) = D$为常数。
+    
+    这意味着$"SAT" lt.slant_K "SAT"_H$(结合$"SAT"_H$的定义)，这说明$"SAT"$$in$#p()，又$"SAT"$是#np()-完全的，故#p()$eq$#np()，与前提矛盾。
+    #line()
+ 
+    再来用反证法证明$"SAT"_H in.not bold("NPC")$。
+    
+    若$"SAT"_H in bold("NPC")$,则存在一个在$d n^d$时间内计算的规约$r: "SAT"|-> "SAT"_H$.由上述,$exists N , abs(psi)>d and$
     $ abs(r(phi)) = abs(psi 01^(abs(psi)^(H(abs(psi))))) >N $,可得到$H(abs(psi)) > 2d+1$.
     则$     & abs(psi)^(2d+1) < abs(psi)^(H(abs(psi)))<abs(r(phi)) lt.slant d abs(phi)^d < abs(psi) abs(phi)^d \
     ==> & abs(psi) < sqrt(abs(phi)). $
@@ -298,3 +316,13 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
     设调用了k次,则$1 lt.slant abs(phi)^(2^(-k)) lt.slant N$.则$k lt.slant log(log(abs(phi)))$.所以多项式时间可计算,$"SAT"_H in$#p(). 这又是一个矛盾.
 ]
 
+== 神谕图灵机
+#definition("Oracle Turing Machine")[
+  An *Oracle Turing Machine (OTM)* is a TM $MM^?$ that has additionally one read-write *oracle tape* and *states* $q_("query"), q_("yes"), q_("no")$.
+
+  - To execute $MM^?$ we need to specify an *oracle* $B subset.eq {0, 1}^*$.
+  - During an execution whenever $MM^B$ enters the state $q_("query")$, the machine moves into the state $q_("yes")$ if $a in B$ and $q_("no")$ if $a in.not B$, where $a$ is what is on the oracle tape.
+  - A query to $B$ counts as a *single* computation step.
+
+  We write $MM^B(x)$ for the output of $MM^B$ on input $x$.
+]
