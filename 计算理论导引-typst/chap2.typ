@@ -4,9 +4,9 @@
 #import "@preview/cuti:0.2.1": show-cn-fakebold
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
-#set text(font: "Songti SC")
+//#set text(font: "Songti SC")
 //#show emph: text.with(font: ("STKaiti"))
-#show smartquote: set text(font: "Libertinus Serif")
+//#show smartquote: set text(font: "Libertinus Serif")
 #import "@preview/dvdtyp:1.0.1": *
 
 #set line(length: 100%, stroke: 0.1pt)
@@ -45,16 +45,16 @@
 ]
 
 #remark[ *Configuration（格局）的编码长度*
-  
-一个格局 $C$ 必须完整地编码图灵机的所有信息，包括：
 
-磁带内容： 共有 $S(|x|)$ 个磁带格子，每个格子用固定的位数（通常是 $O(1)$ 或 $O(log|Sigma|)$）编码。总长度为 $O(S(|x|))$。
+  一个格局 $C$ 必须完整地编码图灵机的所有信息，包括：
 
-读写头位置： 共有 $S(|x|)$ 个可能位置。需要 $log(S(|x|))$ 位来编码。
+  磁带内容： 共有 $S(|x|)$ 个磁带格子，每个格子用固定的位数（通常是 $O(1)$ 或 $O(log|Sigma|)$）编码。总长度为 $O(S(|x|))$。
 
-机器状态： 状态集合 $Q$ 是有限的，需要 $O(1)$ 或 $O(log|Q|)$ 位来编码。
+  读写头位置： 共有 $S(|x|)$ 个可能位置。需要 $log(S(|x|))$ 位来编码。
 
-因此，一个完整的格局 $C$ 作为一个布尔变量串，其总长度是由磁带内容长度主导的，即：#mitex(`$$\text{Length}(C) = O(S(|x|)) + O(\log S(|x|)) + O(1) = \mathbf{O(S(|x|))}$$`)
+  机器状态： 状态集合 $Q$ 是有限的，需要 $O(1)$ 或 $O(log|Q|)$ 位来编码。
+
+  因此，一个完整的格局 $C$ 作为一个布尔变量串，其总长度是由磁带内容长度主导的，即：#mitex(`$$\text{Length}(C) = O(S(|x|)) + O(\log S(|x|)) + O(1) = \mathbf{O(S(|x|))}$$`)
 ]
 
 利用格局图我们可以解决如下问题：
@@ -217,9 +217,9 @@ QBF之前已经写过.我们来考察这一个不错的结果.
   $<yes>
   上面一个公式的意思是:
   #mi(`$\exists C''$`)：先猜一个中间点 $C''$。
-  
+
   #mi(`$\forall D^1 \forall D^2$`)：对于任意的一对节点 #mi(`$(D^1, D^2)$`)...
-  
+
   #mi(`$(\dots) \Rightarrow \psi_i(D^1, D^2)$`)：如果这对节点满足特定条件：如果你考察的是 (起点, 中点) 这一对，或者 你考察的是 (中点, 终点) 这一对，那么它们之间必须连通（调用 $psi_i$）。
 
   再来估算$abs(psi_i).$不难看出$abs(psi_i) = abs(psi_(i-1)) + O(S(abs(x)))$.所以$abs(psi_x) = O(S(abs(x))^2)$.所以我们定义了一个规约.
@@ -304,28 +304,30 @@ QBF之前已经写过.我们来考察这一个不错的结果.
   `2SAT` 是#nl()完全的.
 ]
 #proof[
-  1. 证明 $2 S A T ∈ #nl()$ （相对简单）。
+  1. 证明 $"2SAT" ∈ #nl()$ （相对简单）。
 
     假设我们有一个`2SAT`是$phi$。
-  
-    对$phi$的k个变量,构造2k个点$x_1,dots,x_k,overline(x_1),dots,overline(x_k)$；构造边$overline(u) --> v,overline(v)--> u  <==> u or v in phi$.
-  
+
+    对$phi$的k个变量,构造2k个点$x_1,dots,x_k,overline(x_1),dots,overline(x_k)$；构造边$overline(u) --> v,overline(v)--> u <==> u or v in phi$.
+
     证明：$phi$不可满足当且仅当$v ,overline(v)$是通路.
-    
+
     必要性很显然，充分性：
     假定不存在$v,overline(v)$的通路，我们对没有赋值的$v,forall w s.t.v-->w$,给$w$赋值为真,$overline(w)$赋值为假.这样归纳的我们找到了真值指派,矛盾.
 
     这就把`2SAT`问题归约到了图的不可达性问题(#overline("PATH"))，而(#overline("PATH"))和PATH都是#nl()-完全的；
-    
+
     所以$2 S A T ∈ #nl()$。
 
   2. 证明 $2 S A T$ 是 #nl()-难的。
 
     留给ysz证明。（书P58）
-  
+
 
 ]
 
 #theorem[
-  #mitex(`L \subseteq \textbf{NL} \subseteq \textbf{P} \subseteq \textbf{NP} \subseteq \textbf{PSPACE} \subseteq \textbf{EXP}.`)
+  #mitex(
+    `L \subseteq \textbf{NL} \subseteq \textbf{P} \subseteq \textbf{NP} \subseteq \textbf{PSPACE} \subseteq \textbf{EXP}.`,
+  )
 ]

@@ -4,9 +4,9 @@
 #import "@preview/cuti:0.2.1": show-cn-fakebold
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
-#set text(font: "Songti SC")
+//#set text(font: "Songti SC")
 //#show emph: text.with(font: ("STKaiti"))
-#show smartquote: set text(font: "Libertinus Serif")
+//#show smartquote: set text(font: "Libertinus Serif")
 #import "@preview/dvdtyp:1.0.1": *
 
 #set line(length: 100%, stroke: 0.1pt)
@@ -277,17 +277,17 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
   $H(n)$有两个性质：
 
   1. $H(n)$是非递减函数。
-  
+
   2. $H$可在多项式时间内计算。
-  
+
     计算步骤就和定义一样,枚举i,然后枚举*确定*的通用图灵机$MM_i$然后模拟那么多步计算.
     - 根据通用图灵机的定义，模拟*一个图灵机在一个输入$x$上*时间为$c(log(log(log(n))))C log C,C = log(log(n))(log(n))^(log(log(n)))$(这是$i|x|^i$直接代入的结果).
-    
+
     带入之前的可得到$c(log(log(log(n))))C log C$是$o(n)$的，这是因为下标小于$log(log(n))$的自然数的二进制长度不会超过三个log。
-    - 我们最多需要检查 $log log n$ 个图灵机，每个图灵机要检查所有满足$|x| <= log(n)$的|x|，这样的$x$有$2^ log(n) = O(n)$个(外面的$O(n)$)。
-    
+    - 我们最多需要检查 $log log n$ 个图灵机，每个图灵机要检查所有满足$|x| <= log(n)$的|x|，这样的$x$有$2^log(n) = O(n)$个(外面的$O(n)$)。
+
       使用暴力算法，
-      判定$x in "SAT"_H$的时间是$2^ log(n) = O(n)$的(括号里面的那个$O(n)$).
+      判定$x in "SAT"_H$的时间是$2^log(n) = O(n)$的(括号里面的那个$O(n)$).
       所以,$     & T(n) lt.slant (log log (n))O(n)(o(n)+O(n)+T(log(n))+O(1)) \
       ==> & T(n) = o(n^3). $
 
@@ -297,12 +297,12 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
 
 
     假设$"SAT"_H$$in$#p(),则存在$MM_i$在$c n^c$时间内计算$"SAT"_H$。则对充分大的$n$,$H(n) lt.slant i$。又$H$不递减，说明$exists n_0 , forall n > n_0 , H(n) = D$为常数。
-    
+
     这意味着$"SAT" lt.slant_K "SAT"_H$(结合$"SAT"_H$的定义)，这说明$"SAT"$$in$#p()，又$"SAT"$是#np()-完全的，故#p()$eq$#np()，与前提矛盾。
     #line()
- 
+
     再来用反证法证明$"SAT"_H in.not bold("NPC")$。
-    
+
     若$"SAT"_H in bold("NPC")$,则存在一个在$d n^d$时间内计算的规约$r: "SAT"|-> "SAT"_H$.由上述,$exists N , abs(psi)>d and$
     $ abs(r(phi)) = abs(psi 01^(abs(psi)^(H(abs(psi))))) >N $,可得到$H(abs(psi)) > 2d+1$.
     则$     & abs(psi)^(2d+1) < abs(psi)^(H(abs(psi)))<abs(r(phi)) lt.slant d abs(phi)^d < abs(psi) abs(phi)^d \

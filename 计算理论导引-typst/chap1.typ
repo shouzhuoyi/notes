@@ -4,17 +4,10 @@
 #import "@preview/cuti:0.2.1": show-cn-fakebold
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
-#set text(font: "Songti SC")
-//#show emph: text.with(font: ("STKaiti"))
-#show smartquote: set text(font: "Libertinus Serif")
+
 #import "@preview/dvdtyp:1.0.1": *
 
 #set line(length: 100%, stroke: 0.1pt)
-// #show: dvdtyp.with(
-//   title: "计算理论导引笔记",
-//   subtitle: "2025",
-//   author: "kiwiizzz,xhkzdepartedream",
-// )
 
 //TODO:吧所有解读换成#denote[]
 #show math.equation: it => {
