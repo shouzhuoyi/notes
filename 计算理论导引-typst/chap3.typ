@@ -316,13 +316,56 @@ Berman-Hartmanis猜测：所有NP-完全问题都是等价的,也就是,多项�
     设调用了k次,则$1 lt.slant abs(phi)^(2^(-k)) lt.slant N$.则$k lt.slant log(log(abs(phi)))$.所以多项式时间可计算,$"SAT"_H in$#p(). 这又是一个矛盾.
 ]
 
-== 神谕图灵机
+== 神谕图灵机,以及更多
+我们想主观的解决所有的“子程序调用”问题,这样引入了神谕的概念.
 #definition("Oracle Turing Machine")[
-  An *Oracle Turing Machine (OTM)* is a TM $MM^?$ that has additionally one read-write *oracle tape* and *states* $q_("query"), q_("yes"), q_("no")$.
+  一个*神谕图灵机* $MM^?$ 有额外的一条读写*神谕带*和*状态* $q_("query"), q_("yes"), q_("no")$.
 
-  - To execute $MM^?$ we need to specify an *oracle* $B subset.eq {0, 1}^*$.
-  - During an execution whenever $MM^B$ enters the state $q_("query")$, the machine moves into the state $q_("yes")$ if $a in B$ and $q_("no")$ if $a in.not B$, where $a$ is what is on the oracle tape.
-  - A query to $B$ counts as a *single* computation step.
+  - $MM^?$ 需要一个判定问题,也就是*神谕* $B subset.eq {0, 1}^*$.
+  - 在执行$MM^B$时,每当$MM^B$进入状态$q_("query")$,机器移动到状态$q_("yes")$如果$a in B$和$q_("no")$如果$a in.not B$，其中$a$是神谕带上的内容。
+  - 一个查询到$B$算作*单步*计算。
 
-  We write $MM^B(x)$ for the output of $MM^B$ on input $x$.
+  我们用$MM^B(x)$表示$MM^B$在输入$x$上的输出.
+
+]
+你再写英语的笔记我就把你踢出去.
+
+我们可以利用哥德尔编码来给神谕图灵机编码并排序$MM^?_0,MM^?_1,dots$.
+
+我们还能用神谕图灵机来定义一些复杂的复杂性类.例如,$#p()^O$是带神谕O的确定图灵机可判定的问题所构成的集合.
+
+我们还能用这些复杂性类来定义复杂性类.例如(作业里已经有了)
+$
+  #np()^#np() eq.delta ⋃_(O in #np())#np()^O.
+$
+
+$#np()^(O[k])$是$#np()^(O)$的一个子类.
+
+#let pspace() = $bold("PSPACE")$
+
+我们来看(finally!)本章的最后一个定理:
+#theorem("Baker-Gill-Solovay Theorem")[
+  $exists A,B ,#p()^A = #np()^A and #p()^B eq.not #np()^B$
+  .
+]
+#proof[
+  第一个case:$#pspace() = #p()^#pspace() in #np()^#pspace() = #pspace()$.所以任意#pspace()完全的问题都能解决问题,例如`QBF`.
+  #line()
+  第二个case:直观地想,如果有一个问题,拒绝它需要调用大于多项式次数的神谕,所以我们在调用多项式次数的情形下*会犯错*,那么构造这样的问题就好了.不妨设这样的神谕是$B$,并且有$B_0 subset.eq B_1 subset.eq B_2 dots.c ,B = ⋃ B_i$.
+
+  我们的目标是:对这个语言$L_B eq.delta{1^n | exists s in {0,1}^n and s in B}$,我们构造$B$,让所有多项式图灵机$MM_i^B$犯错,也就是$L_B in.not #p()^B$.($L_B in #np()^B$,是因为非确定图灵机总能猜测这个$s$,然后调用神谕,而不是光靠枚举所有可能的$s$)
+
+  利用先前提到的哥德尔编码,我们想让$MM^(B_i)_i$无法正确判断$1^(n_(i+1))$是否属于$B$.我们归纳的构造$B_i$.
+
+  1. 如果$MM^(B_i)_i$在$2^(n_(i+1)-1)$步内判定$1^(n_(i+1))$为*拒绝*,那我们就让$B_(i+1) = B_i + s, s in {0,1}^(n_(i+1)).$
+  2. 如果$MM^(B_i)_i$在$2^(n_(i+1)-1)$步内判定$1^(n_(i+1))$为*接受*,或者没停,那我们就让$B_(i+1) = B_i.$
+
+  这两步以来,$B$里就是一系列“稀疏的”字符串集合,只在特定的$i$下有一个该长度的字符串.
+
+
+  选择$n_(i+1)$足够大,保证$MM^(B_i)_i$在$2^(n_(i+1)-1)$步内只能查询$B_i$中的有限个字符串(因为每一步最多查一个字符串,而$B_i$只包含之前加入的有限个字符串).因此,我们可以安全地加入一个$s$,它不在$MM^(B_i)_i$的查询范围内,从而不影响$MM^(B_i)_i$在$B_i$上的行为.根据对角线法则,我们可以发现$L_B$就是所求.命题得证.
+]
+
+#remark[
+  注意一下,其实$abs({0,1}^n) = 2^n > n^k$,所以光靠枚举是枚举不完所有的字符串的,这也是一个我们能让多项式图灵机犯错的基本逻辑.
 ]
