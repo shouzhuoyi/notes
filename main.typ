@@ -11,7 +11,7 @@
 )
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
-#set text(font: ("New Computer Modern Sans", "Family Song"))
+#set text(font: ("New Computer Modern Sans", "FmlSong", "Family Song"))
 #show emph: text.with(font: ("New Computer Modern Sans", "STKaiti"))
 #show strong: text.with(font: ("New Computer Modern Sans", "STKaiti"))
 #show smartquote: set text(font: "Libertinus Serif")
