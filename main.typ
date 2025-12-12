@@ -7,7 +7,7 @@
 #show: dvdtyp.with(
   title: "计算理论导引笔记",
   subtitle: "2025",
-  author: "kiwiizzz,xhkzdepartedream",
+  author: "kiwiizzz&xhkzdepartedream",
 )
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
