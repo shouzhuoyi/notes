@@ -132,7 +132,10 @@ nobody cares.
 
 
 == Logspace Reduction
-即使你不直接算出整个 $f(x)$,只要你能“按需访问”它的每一位,并且只用很少的空间（对数空间）,那这个函数就算‘隐式对数空间可计算’.<label:logspace-reduction>
+
+一类问题属于对数空间与是对数空间可计算的是两码事，因为前者需要考虑输出也在对数空间内。
+
+即使你不直接算出整个 $f(x)$,只要你能“按需访问”它的每一位,并且只用很少的空间（对数空间）,那这个函数就算“隐式对数空间可计算”.<label:logspace-reduction>
 #definition[
   称$f$为隐式对数空间可计算的,如果他满足:
 
@@ -161,8 +164,8 @@ nobody cares.
 #theorem[
   $lt.eq.slant_L$是结合的.
 ]
-#figure(align(center, image("9ed3534a619618e298d4a93523973690.jpeg", width: 40%)), caption: [
-  派YYL来做这个漂亮的手写图
+#figure(align(center, image("reduction.jpg", width: 60%)), caption: [
+  归约的传递性
 ])
 #proof[
   我们维护一个对数长的计数器,来看 $g$ 在处理 $f(x)$ 的哪一位.这是因为,图灵机在模拟 $g$ 的时候,不需要记录 $f(x)$ 的每一位,而只关心读写头到了哪里.我们可以视作 $f(x)$ 被记录在了一个虚拟带中,靠这个计数器来模拟读写头的读写.
