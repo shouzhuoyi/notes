@@ -9,7 +9,6 @@
 
 #set line(length: 100%, stroke: 0.1pt)
 
-//TODO:吧所有解读换成#denote[]
 #show math.equation: it => {
   if it.body.fields().at("size", default: none) != "display" {
     return math.display(it)

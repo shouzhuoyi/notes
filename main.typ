@@ -11,7 +11,7 @@
 )
 #show: show-cn-fakebold
 #import "@preview/mitex:0.2.5": *
-#set text(font: ("New Computer Modern Sans", "Source Han Serif SC"))
+#set text(font: ("New Computer Modern Sans", "Family Song"))
 #show emph: text.with(font: ("New Computer Modern Sans", "STKaiti"))
 #show strong: text.with(font: ("New Computer Modern Sans", "STKaiti"))
 #show smartquote: set text(font: "Libertinus Serif")
@@ -21,7 +21,6 @@
 
 
 #outline()
-//TODO:吧所有解读换成#denote[]
 #show math.equation: it => {
   if it.body.fields().at("size", default: none) != "display" {
     return math.display(it)
