@@ -47,8 +47,12 @@
 #proof[
   1. SAT $lt.slant_K$ 0-1 Integer Programming:$forall S in "SAT"$,S有m个字句,n个元素.$bold(A)$是n行m列的矩阵,$A_(i j)$表示第i个元素在第j个字句有没有出现,$bold(x)$是S的指派,取$bold(b) = bold(0)$.$bold(A bold(x)) = bold(b)$,这就是一个规约.
     #line()
-  2. SAT $lt.slant_K$ Clique. $forall S in "SAT"$,S有m个字句,n个元素.
-    $ G = angle.l V,E angle.r,V eq.delta {x_1, x_2, ... , x_n| x_i in S},E eq.delta {(x_i, x_j) | x_i,x_j "不在一个子句中且不矛盾"} $.$G$的团的大小就是$m$.
+  2. SAT $lt.slant_K$ Clique. $forall S in "SAT"$,S有m个子句,n个元素($x,not x$视为不同的元素).
+    $ G = angle.l V,E angle.r,V eq.delta {x_1, x_2, ... , x_n| x_i in S},E eq.delta {(x_i, x_j) | x_i,x_j "不在一个子句中且不矛盾"} $
+
+    如果这 $m$ 个点两两都有边（即"团"），就意味着：
+    - 它们来自 $m$ 个不同的子句（涵盖了所有子句）。
+    - 它们彼此不冲突（可以找到一组真值赋值让这 $m$ 个文字全是 True）。
     #line()
   3. Clique $lt.slant_K$ Set Packing. $forall G = angle.l V,E angle.r in "Clique"$,$cal(U) = overline(E),S_v eq.delta {e in cal(U) | v in e}$#line()
   4. Clique $lt.slant_K$ Vertex Cover.$G$有一个大小为k的团,补图就有一个大小为$abs(V)-k$的独立集.#line()
@@ -56,11 +60,11 @@
   6. Vertex Cover $lt.slant_K$ Feedback Node Set.$forall G = angle.l V,E angle.r in "Vertex Cover"$,把E里的无向边化成2个有向边.$forall angle.l u,v angle.r in E,angle.l u-> v angle.r ,angle.l v -> u angle.r in E'$#line()
   7. Vertex Cover $lt.slant_K$ Feedback Arc Set.把点拆成两个,构造环.并且视图诱导它删边只删掉拆分点出来的那个边.$ forall G = angle.l V,E angle.r in "Vertex Cover", forall v in V ,{v_1,v_2} in V' ; $
   $ forall angle.l u,v angle.r in E,angle.l u_1 -> u_2 -> v_1 ->v_2 -> u_1 angle.r in E' $#line()
-  8. 3SAT $lt.slant_K$ Directed Hamilton Circuit.#link("https://blog.csdn.net/weixin_58140705/article/details/137030103")
-  9. 3-SAT $lt.slant_K$ Chromatic Number.这太难了.#link("https://blog.csdn.net/devout_/article/details/130201864")
-  10. Chromatic Number $lt.slant_K$ Clique Cover.每个同一个颜色的点,取补图之后就是一个团.
-  11. Chromatic Number $lt.slant_K$ Exact Cover.注意,在规约的时候,我们可以任意*捏造一个集合$S$*,然后再给出划分.放过我吧,我不会
-  12. Exact Cover $lt.slant_K$ Hitting Set.$X ={x_1,dots,x_n},cal(S) = {S_1,dots,S_m},U eq.delta {s_1,dots,s_m},C_i eq.delta{s_j | x_i in S_j},cal(C) = {C_i}.$其中s和S对应.#line()
-  13. Hitting Set $lt.slant_K$ Steiner Tree.我觉得后面不会考
+  1. 3SAT $lt.slant_K$ Directed Hamilton Circuit.#link("https://blog.csdn.net/weixin_58140705/article/details/137030103")
+  2. 3-SAT $lt.slant_K$ Chromatic Number.这太难了.#link("https://blog.csdn.net/devout_/article/details/130201864")
+  3.  Chromatic Number $lt.slant_K$ Clique Cover.每个同一个颜色的点,取补图之后就是一个团.
+  4.  Chromatic Number $lt.slant_K$ Exact Cover.注意,在规约的时候,我们可以任意*捏造一个集合$S$*,然后再给出划分.放过我吧,我不会
+  5.  Exact Cover $lt.slant_K$ Hitting Set.$X ={x_1,dots,x_n},cal(S) = {S_1,dots,S_m},U eq.delta {s_1,dots,s_m},C_i eq.delta{s_j | x_i in S_j},cal(C) = {C_i}.$其中s和S对应.#line()
+  6.  Hitting Set $lt.slant_K$ Steiner Tree.我觉得后面不会考
 
 ]
