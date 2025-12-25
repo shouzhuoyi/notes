@@ -52,7 +52,7 @@
 
     如果这 $m$ 个点两两都有边（即"团"），就意味着：
     - 它们来自 $m$ 个不同的子句（涵盖了所有子句）。
-    - 它们彼此不冲突（可以找到一组真值赋值让这 $m$ 个文字全是 True）。
+    - 它们彼此不冲突、不相关（这些文字可以同时为 True，而不会导致逻辑上的自相矛盾）。
     #line()
   3. Clique $lt.slant_K$ Set Packing. $forall G = angle.l V,E angle.r in "Clique"$,$cal(U) = overline(E),S_v eq.delta {e in cal(U) | v in e}$#line()
   4. Clique $lt.slant_K$ Vertex Cover.$G$有一个大小为k的团,补图就有一个大小为$abs(V)-k$的独立集.#line()
