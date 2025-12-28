@@ -280,7 +280,7 @@ QBF之前已经写过.我们来考察这一个不错的结果.
     #line()
     #proof[
       把$psi = Q_1x_1...Q_n x_n phi(x_1, ..., x_n)$化成如下所示的二叉树:
-      #figure(align(center, image("image.png", height: 25%)))
+      #figure(align(center, image("./image/image.png", height: 25%)))
       然后,对其利用dfs,得到一个指派,然后再线性空间里计算$psi$的值.
     ]
 
@@ -316,7 +316,7 @@ QBF之前已经写过.我们来考察这一个不错的结果.
   如果$S$是空间可构造的,那么,$bold("NSPACE")(S(n)) subset.eq bold("SPACE")(S(n)^2)$.
 ]
 #proof[
-  #figure(align(image("image-1.png", width: 70%), center), caption: [
+  #figure(align(image("./image/image-1.png", width: 70%), center), caption: [
     证明的图
   ])
   这张图直接展示了证明的思路:我们构造这样的格局二叉树,使得,$C_("start"),C_("accept")$在左下角和右下角.我们通过“先左儿子,再右儿子,再祖先”的顺序dfs整个二叉树,利用枚举二进制编码来判断是否存在右儿子.这个流程显然是确定图灵机可完成的.

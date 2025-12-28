@@ -149,7 +149,7 @@
   本步的主要动机是想把图灵机的计算变成公式.
   设单带图灵机$MM=(Gamma , Q , delta)$,时间函数$T(n),t = T(abs(x))$.不妨假设终止格局$C_t$时,带子上只是由输入、结果(0\/1)、$square$组成的,并且读写头指向那个结果(这是因为读写头只动了t步).具体的,如图所示.
   #align(
-    figure(image("image-2.png", width: 070%), caption: [
+    figure(image("./image/image-2.png", width: 070%), caption: [
       哦
     ]),
     center,
@@ -164,7 +164,7 @@
   这等价于可以用$bb(overline(f)):{0,1}^(4l) |-> {0,1}$来等价表示（Why?类比$x and y and z --> w$和利用蕴含表达式之后的结果）.这是一个布尔函数,根据断言,有一个合取范式$phi.alt$.如果记$z^(i,j) = C_i [j]$,则$bb(overline(f))$就是$ phi.alt_(i,j) eq.delta phi.alt(z^(i-1,j-1), z^(i-1,j), z^(i,j-1), z^(i,j)) $
   的一堆公式$phi.alt_(i,j)$构成的.
   #align(
-    figure(image("image-3.png", width: 070%), caption: [
+    figure(image("./image/image-3.png", width: 070%), caption: [
       图里的那么多C就是之前提到的$bb(f)$.这么一堆公式合取出来就的得到了输出.
     ]),
     center,

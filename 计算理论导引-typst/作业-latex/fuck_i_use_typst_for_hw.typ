@@ -37,7 +37,7 @@
 
 #solution[
   #figure(
-    image("../image.png", width: 80%),
+    image("./image/../image.png", width: 80%),
     caption: [课本上的图],
   )
 

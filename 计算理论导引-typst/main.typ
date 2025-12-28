@@ -29,6 +29,13 @@
 }
 #let fake-italic(body) = box(text([#skew(ax: -12deg) [#body]]))
 #set math.equation(numbering: "(1)", supplement: [公式])
-#include "计算理论导引-typst/chap1.typ"
-#include "计算理论导引-typst/chap2.typ"
-#include "计算理论导引-typst/chap3.typ"
+#include "chap1.typ"
+#include "chap2.typ"
+#include "chap3.typ"
+= 后记
+计算复杂性理论是一门有趣的学科.在这里,你不需太关心细节,而是要理解证明的思想.与从例子出发不同,这门课理论和形式化的思想对笔者的认识、理解问题的能力得到了很大的启发.
+
+笔记利用Typst编写.Typst的便携性和专业性处于markdown和LaTeX中间,非常适合用来写笔记.
+
+既然你已经在茫茫github找到了这个仓库,希望我的笔记对大家有所帮助.难免有疏漏之处,请不吝修正之,并继续维护这个笔记.
+

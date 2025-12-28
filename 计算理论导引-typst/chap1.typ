@@ -239,7 +239,7 @@ cases(
   + 我们先把 $U$ 的主工作带分成 $k$ 层,用一条工作带虚拟的模拟 $k$ 条带(用存 $k$ 元组的方法来解决);我们把0处的位置记作读写头读取的东西,然后我们把读写头的移动模拟为带子的反向移动.
 
   + 存放冗余信息（用 $times$ 表示）,把主工作带划分为以 $2^i$ 为长度的多个区间,如图所示；
-    #figure(image("1.png", width: 100%), caption: [
+    #figure(image("./image/1.png", width: 100%), caption: [
       证明图
     ])
   + 填充的规则如下：$L_i , R_i$ 上填充的有效信息加起来是 $2^(i + 1)$,且单个是只有满、半满、空 3 种状态.填充这个需要时间复杂度 $O (T log T)$.
@@ -484,7 +484,7 @@ What nondeterminism provides is the power of *guessing*.
 3.我们*为什么*可以取这样的 $L in bold(upright(T I M E)) (f (n))$,$M_z (z)$ 判定之,并且这里的$z$还能充分大?其实,我们是这么做的:取这样的$z$,s.t.$MM_z$判定$L$的时间函数$T(n) lt.eq.slant C f(n)$.
 
 4.对角线方法的图例:
-#figure(image("diag.jpg", width: 80%), caption: [
+#figure(image("./image/diag.jpg", width: 80%), caption: [
   对角线的来源是用通用图灵机模拟一个图灵机的时候,在对角线的时候取反.
 ])
 #line()
@@ -539,7 +539,7 @@ What nondeterminism provides is the power of *guessing*.
 
   2. 暴力法的意思就是枚举所有的计算路径
 
-  3. #figure(image("32c815519fe3bff44e3e15fc68be1016.jpeg", width: 80%), caption: [
+  3. #figure(image("./image/32c815519fe3bff44e3e15fc68be1016.jpeg", width: 80%), caption: [
       这个图展示了每个带子上都写了些啥.从上到下分别是输入带,第一、第二条工作带,和草稿带.
     ])
   4.既然$LL_i$完全由递归呈现,那么$LL_0$在哪里?注意,我们必须假定有一个成熟的算法来枚举${LL_i}$.并且我们不用关心时间复杂度.当$ZZ$的扫描输入这一步骤结束之后,枚举自然应该结束.
