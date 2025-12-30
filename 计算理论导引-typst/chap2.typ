@@ -106,8 +106,6 @@
 
 #remark[
   Games are Harder than Puzzles.(ppt)
-
-  *Fuck 计算理论导引.(——YYL)*
 ]
 
 还有一个定理.
