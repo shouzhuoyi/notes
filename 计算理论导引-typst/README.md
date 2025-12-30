@@ -45,6 +45,7 @@
 │   └── 测试/
 ├── image/                   # 图片
 ├── Final Exam Instructions.txt  # 2025-2026期末考试范围
+├── 2025-2026 Final Exam.txt  # 2025-2026期末考试真题
 └── modified_dvd.typ         # 修改后的Typst模板
 ```
 
