@@ -1,0 +1,85 @@
+
+\documentclass{article}
+
+\usepackage{amsbsy}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsopn}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{array}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{ctex}
+\usepackage{fancyhdr}
+\usepackage{fontspec}
+\usepackage{geometry}
+\usepackage{graphicx} % 图片支持
+% \usepackage[colorlinks,linkcolor=blue]{hyperref}
+\usepackage[utf8]{inputenc}  % 必须放在导言区最前面
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{subfiles} % 可选：支持子文件独立编译
+\usepackage{wallpaper}
+\usepackage[dvipsnames]{xcolor}
+
+
+
+
+\newunicodechar{​}{}  % 将U+200B映射为空
+\newtheorem{theorem}{定理}
+\newtheorem{definition}{定义}
+
+\geometry{a4paper,scale=0.8}
+\graphicspath{{./img/}} % 图片路径设置
+
+\lstset{
+    language=C++, % 设置语言
+ basicstyle=\ttfamily, % 设置字体族
+ breaklines=true, % 自动换行
+ keywordstyle=\bfseries\color{NavyBlue}, % 设置关键字为粗体，颜色为 NavyBlue
+ morekeywords={}, % 设置更多的关键字，用逗号分隔
+ emph={self}, % 指定强调词，如果有多个，用逗号隔开
+    emphstyle=\bfseries\color{Rhodamine}, % 强调词样式设置
+    commentstyle=\itshape\color{black!50!white}, % 设置注释样式，斜体，浅灰色
+    stringstyle=\bfseries\color{PineGreen!90!black}, % 设置字符串样式
+    columns=flexible,
+    numbers=left, % 显示行号在左边
+    numbersep=2em, % 设置行号的具体位置
+    numberstyle=\footnotesize, % 缩小行号
+    frame=single, % 边框
+    framesep=1em % 设置代码与边框的距离
+}
+
+\begin{document}
+
+% \CenterWallPaper{1}{waterprint.jpg}
+\pagestyle{empty}
+\title{算法设计与分析}
+\author{北郊HH}
+\date{2025年5月}
+\maketitle
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+\pagestyle{fancy}
+
+\setcounter{page}{1}
+
+% 导入子文件
+\subfile{chaptersTex/chapter1.tex}
+\subfile{chaptersTex/chapter2.tex}
+\subfile{chaptersTex/chapter3.tex}
+\subfile{chaptersTex/chapter4.tex}
+\subfile{chaptersTex/chapter5.tex}
+\subfile{chaptersTex/chapter6.tex}
+\subfile{chaptersTex/chapter7.tex}
+\subfile{chaptersTex/chapter8.tex}
+\subfile{chaptersTex/chapter9.tex}
+\subfile{chaptersTex/chapter10.tex}
+\subfile{chaptersTex/chapter11.tex}
+
+\end{document}

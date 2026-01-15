@@ -1,0 +1,394 @@
+\documentclass[../mainReport.tex]{subfiles}
+\begin{document}
+\section{Report2}
+\subsection{回文数组}
+\subsubsection{形式化定义}
+将一个数字序列经过若干次操作后变成回文序列, 求出将该数组变为回文数组所需的最小操作次数。操作支持如下：
+\begin{itemize}
+    \item 选择数组中相邻的两个数，同时将其加1或减1；
+    \item 选择数组中单独的一个数，将其加1或减1。
+\end{itemize}
+
+\subsubsection{解题思路}
+联想这道题的解题思路：\url{https://www.luogu.com.cn/problem/P5019}
+
+我们可以想到\textcolor{blue}{贪心}的思路，上面那道题中，我们可以靠前一个坑\textcolor{blue}{顺便}填充下一个坑，这道题我们可以发现第1个操作就是一个\textcolor{blue}{顺便}的操作。所以我们记录好每个位置的\textcolor{blue}{对称差}，再让前一个对称差能够顺便填充后一个对称差即可。\textcolor{blue}{不过需要注意的是对称差是有正负的，和坑洞填充只有一个方向是不同的}。
+
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <iostream>
+% #include <cstdio>
+% #include <cmath>
+% #define ll long long
+% using namespace std;
+
+% const int N = 2e5 + 10;
+
+% int main() {
+%     int n;
+%     scanf("%d", &n);
+%     int a[N];
+%     for (int i = 1; i <= n; ++i) {
+%         scanf("%d", a + i);
+%     }
+
+%     ll tot = 0;
+%     for (int i = 1; i <= n / 2; ++i) {
+%         int diff = a[i] - a[n - i + 1];
+%         tot += abs(diff);
+
+%         if (i + 1 <= n / 2) {
+%             int next_diff = a[i + 1] - a[n - i];
+%             if ((diff >= 0 && next_diff >= 0) || (diff <= 0 && next_diff <= 0)) {
+%                 if (abs(diff) >= abs(next_diff)) {
+%                     a[i + 1] = a[n - i];
+%                 } else {
+%                     a[i + 1] -= diff;
+%                 }
+%             }
+%         }
+%     }
+%     printf("%lld", tot);
+%     return 0;
+% }
+% \end{lstlisting}
+
+\subsection{平衡饮食}
+\subsubsection{形式化定义}
+背包的容量为$X$，其中要装入3种物品，每种物品有其对应的价值$A_i$和体积$C_i$，现在希望你采取合适的装包方式，使得3种物品各自的总价值$F_1,F_2,F_3$的最小值最大。即，使得$\min(F_1,F_2,F_3)$最大。
+
+\subsubsection{解题思路}
+采用\textbf{动态规划}和\textbf{二分答案}的思想。
+
+\begin{itemize}
+    \item 状态定义：$dp[i][j]$，种类$i$用$j$容量所能获得的价值最大值
+    \item 状态转移方程：$dp[i][j]=\max(dp[i][j], dp[i][j-c] + a)$，对每种食物，需要逆向更新数组，经典的01背包问题。
+    \item 初始条件：$dp[i][0] = 0$，其他均设置为$INF$，表示该情况非法。 
+    \item 前缀最大值优化：$dp[i][j] = \max(dp[i][j], dp[i-1][j])$，如果当前容量$j$下，无法获得价值，则直接取上一步的最大值。
+\end{itemize}
+
+对于本题，显然是满足单调性的，如果可以获取更大的最低价值，则一定可以获取更小的最低价值。所以满足\textcolor{blue}{二分答案}的条件。即，将优化问题转化为判定问题。对于给定的目标值$mid$，判断是否存在一个组合可以使得在满足容量限制的情况下，3种物品的总价值均大于$mid$。这样就能说明答案至少是$mid$，可以尝试更大的的答案。
+
+% \begin{lstlisting}[caption={二分答案部分代码}]
+% // 二分查找
+% int low=0, high=min({dp[1][x], dp[2][x], dp[3][x]});
+% while(low <= high) {
+%     int mid = (low+high)/2;
+%     if(可以满足min(V1,V2,V3)>=mid) 
+%         low = mid+1;
+%     else 
+%         high = mid-1;
+% }
+
+% // 二分验证mid
+% int sum = 0, ok = 1;
+% for (int v = 1; v <= 3; v++) {
+%     int cost = lower_bound(dp[v], dp[v] + x + 1, mid) - dp[v];
+%     if ((sum += cost) > x || cost > x) {
+%         ok = 0; break;
+%     }
+% }
+% \end{lstlisting}
+
+\subsubsection{复杂度分析}
+对于状态转移部分，每个物品都要遍历$x-c$次，总共$n$个物品，所以状态函数计算部分的复杂度为：
+\[
+    T_{DP}=O(n\cdot x)
+\]
+二分答案对于验证部分需要对3种物品进行二分查找：
+\[
+    T_{check}=O(3\cdot\log x)=O(\log x)
+\]
+
+设物品中最大的价值为$V_{max}$，则二分的次数为：
+\[
+    T_{search}=O(\log V_{max})
+\]
+
+所以总时间复杂度为：
+\[
+    T_{total}=T_{DP} + T_{check}\cdot T_{search}=O(n\cdot x) + O(\log x\cdot\log V_{max})
+\]
+
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <iostream>
+% #include <cstdio>
+% #include <algorithm>
+% #define int long long
+% using namespace std;
+
+% const int INF = 1e9;
+% const int MX = 5e3+5;
+
+% int dp[4][MX]; // dp[v][c]：维生素v用c卡路里能获得的最大量
+% int n, x;
+
+% int max(int a, int b){
+%     return a>b ? a : b;
+% }
+
+% signed main() {
+%     // freopen("in.txt", "r", stdin);
+%     scanf("%lld%lld", &n, &x);
+    
+%     for(int v=1; v<=3; v++) {
+%         fill(dp[v], dp[v]+x+1, -INF);
+%         dp[v][0] = 0; 
+%     }
+    
+%     for(int i=1; i<=n; i++) {
+%         int v, a, c;
+%         scanf("%lld%lld%lld", &v, &a, &c);
+%         for(int j=x; j>=c; j--) {
+%             if(dp[v][j-c] != -INF) {
+%                 dp[v][j] = max(dp[v][j], dp[v][j-c]+a);
+%             }
+%         }
+%     }
+    
+%     for(int v=1; v<=3; v++) {
+%         for(int j=1; j<=x; j++) {
+%             dp[v][j] = max(dp[v][j], dp[v][j-1]);
+%         }
+%     }
+    
+%     int low = 0, high = min({dp[1][x], dp[2][x], dp[3][x]}), ans = 0;
+%     if(high < 0) return printf("0"), 0;
+    
+%     while(low <= high) {
+%         int mid = (low+high)>>1;
+%         int sum = 0, ok = 1;
+        
+%         for(int v=1; v<=3; v++) {
+%             int* d = dp[v];
+%             int cost = lower_bound(d, d+x+1, mid) - d;
+%             if((sum += cost) > x || cost > x) {
+%                 ok = 0; break;
+%             }
+%         }
+        
+%         ok ? (ans=mid, low=mid+1) : (high=mid-1);
+%     }
+%     printf("%lld", ans);
+% }
+% \end{lstlisting}
+
+\subsection{其实 Allen 是幕后大 BOSS}
+\subsubsection{形式化定义}
+给定一个长度为$n$（$n$为奇数）的员工序列，其中第$i$个员工的工资范围为$[l_i, r_i]$。初始总工资满足$\sum_{i=1}^n l_i \leq s$。我们需要为每个员工分配工资$w_i \in [l_i, r_i]$，满足：
+
+\begin{enumerate}
+    \item 总工资约束：$\sum_{i=1}^n w_i \leq s$
+    \item 最大化工资序列的中位数
+\end{enumerate}
+
+设$k = \frac{n+1}{2}$，优化目标为：
+
+$$
+\max \left\{ \text{median}(w_1, w_2, \dots, w_n) \right\}
+$$
+约束条件：
+$$
+\begin{cases}
+    l_i \leq w_i \leq r_i & \forall i \in \{1,2,\dots,n\} \\
+    \sum_{i=1}^n w_i \leq s
+\end{cases}
+$$
+
+\subsubsection{解题思路}
+先发出基础工资，把每位员工工资初始化为$l[i]$，再看此时高于设定目标中位数$mid$的员工数量，若达到要求就返回，否则调整后续员工工资；为了调整中位数但尽可能小的增加总工资，应该优先调整\textcolor{blue}{最接近中位数的元素}，所以综合考虑前面的论述，我们必须要对员工的最低工资$l[i]$进行\textcolor{blue}{从大到小}排序。
+
+当目标中位数$mid$可以达成时，则挑战更高的中位数标准，若不行，则尝试更低的中位数标准。需要注意的是，\textbf{每次尝试之间需要把总工资回调到原来的状态}，这里我们并没有对每个人的具体工资做改动，而是只改动总工资，在效果上相当于改动了每个人的具体工资。
+
+\subsubsection{复杂度分析}
+\begin{itemize}
+    \item 预处理：$O(n)$计算初始总工资
+    \item 排序：$O(n \log n)$
+    \item 二分查找：$O(\log (\max r_i))$
+    \item 每次检查：$O(n)$
+    \item 总复杂度：$O(n \log n + n \log (\max r_i))$
+\end{itemize}
+
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <bits/stdc++.h>
+% #define ll long long
+% using namespace std;
+
+% const int N = 2e5 + 10;
+% int t;
+% int n;
+% ll s;
+% int l[N], r[N];
+% ll ans;
+% ll minl=2e14, maxr=0;
+
+
+% ll min(ll a, ll b){
+%     return a < b ? a : b;
+% }
+% ll max(ll a, ll b){
+%     return a > b ? a : b;
+% }
+% bool cmp(int a, int b) {
+%     return l[a] > l[b];
+% }
+% void solve() {
+%     ll sum_li = 0;
+%     for (int i = 1; i <= n; ++i) {
+%         sum_li += l[i];
+%     }
+    
+%     vector<int> idx(n);
+%     for (int i = 0; i < n; ++i) {
+%         idx[i] = i + 1;
+%     }
+%     sort(idx.begin(), idx.end(), cmp);
+    
+%     int k = (n + 1) / 2;
+%     ll left = minl, right = maxr;
+%     ans = 0;
+    
+%     while (left <= right) {
+%         ll mid = left + (right - left) / 2;
+%         ll current_sum = sum_li;
+%         int cnt = 0;
+%         int i = 0;
+        
+%         // 高工资统计
+%         for (; i < idx.size(); ++i) {
+%             int id = idx[i];
+%             if (l[id] > mid) {
+%                 cnt++;
+%                 if (cnt == k) break;
+%             } else {
+%                 break;
+%             }
+%         }
+        
+%         // 高工资数量足够多，直接尝试下一种可能
+%         if (cnt >= k) {
+%             ans = mid;
+%             left = mid + 1;
+%             continue;
+%         }
+        
+%         // 调整工资
+%         for (; i < idx.size(); ++i) {
+%             int id = idx[i];
+%             if (r[id] >= mid) {
+%                 current_sum += (mid - l[id]);
+%                 cnt++;
+%                 if (cnt == k) break;
+%             }
+%         }
+        
+%         if (cnt >= k && current_sum <= s) {
+%             ans = mid;
+%             left = mid + 1;
+%         } else {
+%             right = mid - 1;
+%         }
+%     }
+% }
+
+% int main() {
+%    // freopen("in.txt", "r", stdin);
+%     scanf("%d", &t);
+%     while (t--) {
+%         ans = 0;
+%         scanf("%d%lld", &n, &s);
+%         for (int i = 1; i <= n; ++i) {
+%             scanf("%d%d", &l[i], &r[i]);
+%             minl = min(minl, l[i]);
+%             maxr = max(maxr, r[i]);
+%         }
+%         solve();
+%         printf("%lld\n", ans);
+%     }
+%     return 0;
+% }
+% \end{lstlisting}
+
+\subsection{Sherway与幂}
+\subsubsection{形式化定义}
+求1到$N$中共有多少个数可以表示成$M^K, K>1, N\le 1e18$.
+\subsubsection{解题思路}
+我们会先有一个朴素的思想，也就是我对$n$进行开根，把开根的结果取整后加起来：
+$$
+ans=\sum_{i=2}^{\infty}\lfloor(n)^{\frac{1}{i}}\rfloor
+$$
+但是这样我们发现，会对个别项重复计算，例如$2^6=4^3=8^2=64$被算了3次，我们应该对其进行去重。这样我们就应该联想到容斥原理来确保不会重复计算，也不会额外扣除。
+
+设$A_i$表示所有$p[i]$次方数的集合($p[i]$表示第$i$个质数)，即：
+\[
+    A_i=\{x^{p[i]}\le n|x\in\mathbb{N}\}
+\]
+我们需要计算的就是$|\bigcup_{i=1}^{\infty}A_i|$，即所有次方数的并集。
+所以有：
+\begin{equation*}
+    |\bigcup_{i=1}^{\infty}A_i|=\sum_{i=1}^{\infty}|A_i|
+    -\sum_{1\le i<j}|A_i\cup A_j|
+    +\sum_{1\le i<j<k}|A_i\cup A_j\cup A_k|\dots
+\end{equation*}
+为了计算上式，所以我们首先需要确定指数取值的上界，只需要找到$imax$使得$2^{p[imax]}\le n < 2^{p[imax+1]}$即可。接着在中间的计算过程中，对于由\textcolor{blue}{奇数}个质数相乘得到的指数幂集合应该\textcolor{blue}{加上}，而对于\textcolor{blue}{偶数}质数相乘得到的指数幂集合应该\textcolor{blue}{减去}。这也都是我们需要统计的。
+
+需要额外注意的是，这里我们可以利用已求出的$imax$，那么从1到$2^{imax}$中的每一个$j$，它的二进制表示可以算作是对于素数数组的一个选取规则。例如$0b101$可以表示选择了素数2和5.这样只需要记录其中1的数量，就知道其选取的素数的奇偶数了。
+
+\subsubsection{复杂度分析}
+\begin{itemize}
+    \item 外层循环：$2^{imax}-1$次
+    \item 内层循环$imax$次
+    \item 总复杂度$O(imax \cdot (2^{imax}-1))$(其中$imax$约为2到$\log n$中质数的数量，在本题中不超过20)
+\end{itemize}
+
+
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <bits/stdc++.h>
+% using namespace std;
+
+% #define ll long long
+% ll n, ans;
+
+% long double ONE = 1.0;
+
+% // 由于n最大是1e18，所以不会超过1 << 67
+% int ps[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67};
+
+% void solve() {
+%     int max_exp = 0;
+%     while(1ll << ps[max_exp + 1] < n) max_exp++;
+
+%     for (int mk = 1; mk < (1 << max_exp); mk++) {
+%         ll exp = 1;
+%         bool flag = false;
+        
+%         for (int j = 0; j < max_exp; j++) {
+%             if (mk & (1 << j)) {
+%                 exp *= ps[j];
+%                 flag = !flag;
+%             }
+%         }
+%         // 特别注意此处对于浮点数精度的调整。
+%         long double one = 1;
+%         ll cnt = (ll)(powl(n, one / exp)+1e-10);
+        
+%         if (flag) {
+%             ans += cnt;
+%         } else {
+%             ans -= cnt;
+%         }
+%     }
+% }
+
+% int main() {
+%     scanf("%lld", &n);
+%     solve();
+%     printf("%lld\n", ans + 1);// 考虑到1一定满足题意，而前面没有统计。
+%     return 0;
+% }
+% \end{lstlisting}
+
+\end{document}
