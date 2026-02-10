@@ -1,0 +1,6 @@
+[package]
+name = "ysz_tools"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["kiwiizzz"]
+description = "我的私人工具库"

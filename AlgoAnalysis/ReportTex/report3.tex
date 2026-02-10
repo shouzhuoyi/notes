@@ -1,0 +1,456 @@
+\documentclass[../mainReport.tex]{subfiles}
+\begin{document}
+\section{Report3}
+\subsection{inf的旅行计划}
+\subsubsection{形式化定义}
+有两个城市，分别有 $n_1$ 和 $n_2$ 个小镇，以及 $m_1$ 和 $m_2$ 条路径。每条路径连接同一城市中的两个小镇，经过路径需要消耗 $x_i$ 的油费。同一城市的所有小镇通过路径连通。旅行者 \textsc{inf} 住在城市 1 的 1 号小镇，计划前往城市 2 的 1 号小镇。现需在两个城市中各选一个小镇建立一条新路径，消耗油费为 $k$。由于无法预知具体选择的小镇，需计算保证到达目的地所需的最少油费。
+
+\paragraph{输入格式}
+第一行包含五个正整数 $n_1$, $n_2$, $m_1$, $m_2$, $k$，分别表示：
+\begin{itemize}
+    \item 城市 1 的小镇数量 $n_1$ 和路径数量 $m_1$，
+    \item 城市 2 的小镇数量 $n_2$ 和路径数量 $m_2$，
+    \item 新建路径的油费 $k$。
+\end{itemize}
+
+接下来 $m_1$ 行，每行三个正整数 $u_{i1}$, $v_{i1}$, $x_{i1}$，表示城市 1 中小镇 $u_{i1}$ 和 $v_{i1}$ 之间存在一条路径，油费为 $x_{i1}$。
+
+随后 $m_2$ 行，每行三个正整数 $u_{i2}$, $v_{i2}$, $x_{i2}$，表示城市 2 中小镇 $u_{i2}$ 和 $v_{i2}$ 之间存在一条路径，油费为 $x_{i2}$。
+
+\paragraph{输出格式}
+一行一个整数，表示保证到达城市 2 的 1 号小镇所需的最少油费。
+
+\subsubsection{解题思路}
+给定两个城市的图结构，我们需要在两个城市中各选一个节点建立一条新边，使得从城市1的起点到城市2的起点的路径油费最小化（在最坏情况下）。以下是解题步骤：
+
+\paragraph{1. 图结构存储与预处理}
+\begin{itemize}
+    \item 使用邻接表存储两个城市的图结构（城市1和城市2分别用 \texttt{type=0} 和 \texttt{type=1} 区分）。
+    \item 每条边是双向的，因此在输入时需添加正向和反向边。
+\end{itemize}
+
+\paragraph{2. 计算单源最短路径}
+\begin{itemize}
+    \item 使用 Dijkstra 算法分别计算：
+        \begin{itemize}
+            \item 城市1中从起点1到所有其他节点的最短油费 \texttt{dist[0][i]}。
+            \item 城市2中从起点1到所有其他节点的最短油费 \texttt{dist[1][i]}。
+        \end{itemize}
+    \item 由于所有边权均为正，Dijkstra 算法可以高效求解。
+\end{itemize}
+
+\paragraph{3. 分析最坏情况下的油费}
+\begin{itemize}
+    \item 新建边的油费为 $k$，因此总油费为：
+        $$
+        \text{Cost}(u, v) = \texttt{dist[0][u]} + k + \texttt{dist[1][v]}
+        $$
+    \item 由于无法预知具体选择的 $u$ 和 $v$，需考虑最坏情况，即：
+        $$
+        \text{Answer} = \max_{u \in S_1, v \in S_2} \left( \texttt{dist[0][u]} + k + \texttt{dist[1][v]} \right)
+        $$
+    \item 为了最小化该最大值，应选择使得 $\texttt{dist[0][u]}$ 和 $\texttt{dist[1][v]}$ 尽可能小的 $u$ 和 $v$。
+\end{itemize}
+
+\paragraph{4. 求解最小化最大油费}
+\begin{itemize}
+    \item 实际上，最坏情况发生在：
+        \begin{itemize}
+            \item 城市1中选择离起点1最远的节点 $u$（即 $\texttt{dist[0][u]}$ 最大）。
+            \item 城市2中选择离起点1最远的节点 $v$（即 $\texttt{dist[1][v]}$ 最大）。
+        \end{itemize}
+    \item 因此，最终答案为：
+        $$
+        \text{Answer} = \max_{2 \leq i \leq n_1} \texttt{dist[0][i]} + k + \max_{2 \leq j \leq n_2} \texttt{dist[1][j]}
+        $$
+    \item 代码中通过遍历 \texttt{dist[0]} 和 \texttt{dist[1]} 数组找到最大值并相加得到结果。
+\end{itemize}
+
+\subsubsection{复杂度分析}
+\begin{itemize}
+    \item Dijkstra 算法的时间复杂度为 $O(m \log n)$，其中 $m$ 是边数，$n$ 是节点数。
+    \item 由于对两个城市分别运行一次 Dijkstra，总时间复杂度为 $O((m_1 + m_2) \log (n_1 + n_2))$。
+    \item 后续遍历求最大值的时间复杂度为 $O(n_1 + n_2)$，可以忽略。
+\end{itemize}
+
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <bits/stdc++.h>
+% #define ll long long
+% using namespace std;
+
+% const int MAX_N = 2e5 + 5;
+% const int MAX_M = 6e5 + 5;
+% const ll INF = 0x3f3f3f3f3f3f3f3f;
+
+% struct Edge {
+%     int to, next;
+%     ll val;
+% } e[2][MAX_M];
+
+% struct Node {
+%     int id;
+%     long long dis;
+%     bool operator<(const Node& rhs) const {
+%         return dis > rhs.dis;
+%     }
+% };
+
+% int head[2][MAX_N], edge_cnt[2];
+% ll dist[2][MAX_N];
+% bool vis[2][MAX_N];
+
+% inline void add_edge(int u, int v, long long w, int type) {
+%     e[type][++edge_cnt[type]] = {v, head[type][u], w};
+%     head[type][u] = edge_cnt[type];
+% }
+
+% void dij(int type, int start) {
+%     priority_queue<Node> pq;
+%     memset(dist[type], 0x3f, sizeof(dist[type]));
+%     memset(vis[type], 0, sizeof(vis[type]));
+    
+%     dist[type][start] = 0;
+%     pq.push({start, 0});
+    
+%     while (!pq.empty()) {
+%         Node cur = pq.top();
+%         pq.pop();
+        
+%         if (vis[type][cur.id]) continue;
+%         vis[type][cur.id] = true;
+        
+%         for (int i = head[type][cur.id]; i; i = e[type][i].next) {
+%             int v = e[type][i].to;
+%             long long w = e[type][i].val;
+            
+%             if (dist[type][v] > cur.dis + w) {
+%                 dist[type][v] = cur.dis + w;
+%                 pq.push({v, dist[type][v]});
+%             }
+%         }
+%     }
+% }
+
+% int main() {
+%     int n1, n2, m1, m2;
+%     ll k;
+%     scanf("%d%d%d%d%lld", &n1, &n2, &m1, &m2, &k);
+    
+%     for (int i = 1; i <= m1; ++i) {
+%         int u, v, w;
+%         scanf("%d%d%d", &u, &v, &w);
+%         add_edge(u, v, w, 0);
+%         add_edge(v, u, w, 0);
+%     }
+    
+%     for (int i = 1; i <= m2; ++i) {
+%         int u, v, w;
+%         scanf("%d%d%d", &u, &v, &w);
+%         add_edge(u, v, w, 1);
+%         add_edge(v, u, w, 1);
+%     }
+    
+%     dij(0, 1);
+%     dij(1, 1);
+    
+%     ll max1 = 0, max2 = 0;
+%     for (int i = 2; i <= n1; ++i) max1 = max(max1, dist[0][i]);
+%     for (int i = 2; i <= n2; ++i) max2 = max(max2, dist[1][i]);
+    
+%     printf("%lld\n", max1 + max2 + k);
+%     return 0;
+% }
+% \end{lstlisting}
+
+\subsection{最小异或路径}
+\subsubsection{形式化定义}
+给定一个简单无向连通图 $ G = (V, E) $，其中：
+\begin{itemize}
+    \item 节点集合 $ V = \{1, 2, \dots, n\} $，$ |V| = n $；
+    \item 边集合 $ E $，$ |E| = m $，每条边 $ e = (u_i, v_i) \in E $ 具有边权 $ w_i $。
+\end{itemize}
+
+定义从节点 $ 1 $ 到节点 $ n $ 的简单路径 $ P $ 的异或和为：
+$$
+\bigoplus_{(u,v) \in P} w_{(u,v)}
+$$
+其中：
+\begin{itemize}
+    \item 简单路径：路径不重复经过任何节点；
+    \item 异或和（$\oplus$）：路径上所有边权的按位异或结果。
+\end{itemize}
+
+\paragraph{目标}
+在所有可能的简单路径 $ P $ 中，找到使得异或和最小的路径，并输出该最小异或和：
+$$
+\text{Answer} = \min_{P \in \mathcal{P}(1, n)} \left( \bigoplus_{(u,v) \in P} w_{(u,v)} \right)
+$$
+其中 $ \mathcal{P}(1, n) $ 表示所有从节点 $ 1 $ 到节点 $ n $ 的简单路径集合。
+
+\subsubsection{解题思路}
+给定一个简单无向连通图，要求找到从节点$1$到节点$n$的所有简单路径中边权异或和最小的路径。以下是基于深度优先搜索（DFS）的解题步骤：
+
+\paragraph{1. 图表示与初始化}
+\begin{itemize}
+    \item 使用邻接表存储图结构，其中每个节点保存其相邻节点及对应边权。
+    \item 初始化全局变量：
+        \begin{itemize}
+            \item \texttt{min\_xor}：记录当前最小异或和，初始设为最大值（\texttt{INF}）。
+            \item \texttt{vis}：标记节点是否被访问过的数组，初始为未访问（\texttt{false}）。
+        \end{itemize}
+\end{itemize}
+
+\paragraph{2. 深度优先搜索（DFS）}
+\begin{itemize}
+    \item 从起点$1$开始递归搜索，维护当前路径的异或和 \texttt{cur\_xor}。
+    \item 递归终止条件：到达目标节点$n$时，更新 \texttt{min\_xor}：
+        $$
+        \texttt{min\_xor} = \min(\texttt{min\_xor}, \texttt{cur\_xor})
+        $$
+    \item 对于当前节点$u$的每个未访问邻居$v$：
+        \begin{itemize}
+            \item 标记$v$为已访问。
+            \item 递归计算$v$到$n$的路径异或和：$\texttt{cur\_xor} \oplus w$（$w$为边权）。
+            \item 回溯时恢复$v$的未访问状态，确保其他路径可探索。
+        \end{itemize}
+\end{itemize}
+
+\paragraph{3. 算法正确性}
+\begin{itemize}
+    \item \textbf{简单路径约束}：通过 \texttt{vis} 数组避免重复访问节点，保证路径简单性。
+    \item \textbf{全局最优性}：DFS遍历所有可能的简单路径，通过比较 \texttt{cur\_xor} 确保找到最小异或和。
+    \item \textbf{连通性保证}：题目给定的图连通，确保至少存在一条从$1$到$n$的路径。
+\end{itemize}
+
+\subsubsection{复杂度分析}
+\begin{itemize}
+    \item 最坏情况下需遍历所有简单路径，时间复杂度为$O((n-1)!)$（如完全图）。
+    \item 实际应用中，可通过剪枝优化（如提前终止大于当前 \texttt{min\_xor} 的路径），但无法改变指数级复杂度。
+\end{itemize}
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <bits/stdc++.h>
+% using namespace std;
+% #define ll long long
+
+% const ll INF = INT64_MAX;
+% vector<vector<pair<int, ll>>> adj;
+% vector<bool> vis;
+% ll min_xor = INF;
+
+% void dfs(int u, int tar, ll cur_xor) {
+%     if (u == tar) {
+%         min_xor = min(min_xor, cur_xor);
+%         return;
+%     }
+%     vis[u] = true;
+%     for (auto [v, w] : adj[u]) {
+%         if (!vis[v]) {
+%             dfs(v, tar, cur_xor ^ w);
+%         }
+%     }
+%     vis[u] = false;
+% }
+
+% int main() {
+%     int n, m;
+%     scanf("%d %d", &n, &m);
+%     adj.resize(n + 1);
+%     vis.resize(n + 1, false);
+    
+%     for (int i = 0; i < m; ++i) {
+%         int u, v;
+%         ll w;
+%         scanf("%d %d %lld", &u, &v, &w);
+%         adj[u].emplace_back(v, w);
+%         adj[v].emplace_back(u, w);
+%     }
+    
+%     dfs(1, n, 0);
+%     printf("%lld\n", min_xor);
+%     return 0;
+% }
+% \end{lstlisting}
+
+\subsection{树学长QwQ下象棋只会用车}
+\subsubsection{形式化定义}
+在阶梯形地图中放置$k$个车，使得他们不会互相攻击的方案数汇总。
+
+\subsubsection{解题思路}
+\begin{enumerate}
+    \item \textbf{预处理阶乘和逆元}：
+    \begin{itemize}
+        \item 使用快速幂算法预先计算阶乘数组\texttt{fact}和逆阶乘数组\texttt{inv\_fact}，模数为$100003$。
+        \item 逆元通过费马小定理计算：$a^{-1} \equiv a^{p-2} \pmod{p}$。
+    \end{itemize}
+
+    \item \textbf{组合数计算}：
+    \begin{itemize}
+        \item 函数$C(n,m)$利用预处理的阶乘和逆元计算组合数$\binom{n}{m} \bmod 100003$。
+        \item 处理边界情况：当$m > n$或$m < 0$时返回$1$。
+    \end{itemize}
+
+    \item \textbf{主计算逻辑}：
+    \begin{itemize}
+        \item 遍历所有可能的分配方式：将$k$分为$i$（分配给$c$和$d$类）和$j = k-i$（分配给其他类）。
+        \item 约束条件：
+        \begin{itemize}
+            \item $i \leq \min(c, d, k)$
+            \item $j = k - i \geq 0$
+            \item $a + e \geq j$（确保有足够容量）
+        \end{itemize}
+        \item 对每个有效分配计算组合数乘积：
+        $$
+        \binom{b+d-i}{j} \times \binom{a+e}{j} \times j! \times \binom{c}{i} \times \binom{d}{i} \times i!
+        $$
+        \item 将各项相乘并对结果取模。
+    \end{itemize}
+
+    \item \textbf{输出结果}：
+    \begin{itemize}
+        \item 累加所有有效分配方式的结果，输出最终值$\bmod 100003$。
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{复杂度分析}
+时间复杂度约为$O(MAXN)$
+
+\subsection{Sherway的卡牌}
+\subsubsection{形式化定义}
+给定初始状态 $S_0 = \{(1)\}$（仅含一张攻击力为 1 的卡牌）和事件序列 $A = (a_1, a_2, \ldots, a_n)$，其中 $\forall a_i \in \{-1, 0, 1\}$。定义状态转移规则如下：
+
+\begin{itemize}
+    \item \textbf{拿牌事件} ($a_i = 1$)：\\
+    若当前状态为 $S_{i-1} = \{x_1, x_2, \ldots, x_m\}$，则新状态为 $S_i = S_{i-1} \cup \{1\}$，其中 $m \geq 0$。
+
+    \item \textbf{弃牌事件} ($a_i = -1$)：\\
+    若 $|S_{i-1}| \geq 2$，选择任意 $x_u, x_v \in S_{i-1}$，转移至 $S_i = (S_{i-1} \setminus \{x_u, x_v\}) \cup \{x_u + x_v\}$；否则游戏失败（输出 -1）。
+
+    \item \textbf{抽奖事件} ($a_i = 0$)：\\
+    可选择执行 $a_i = 1$ 或 $a_i = -1$ 的转移规则（必须选择其一）。
+\end{itemize}
+
+\noindent 定义最终平均攻击力为：
+$$
+\text{Avg}(S_n) = \frac{1}{|S_n|}\sum_{x \in S_n} x
+$$
+
+\noindent \textbf{输入}：\\
+第一行为 $n \in \mathbb{Z}^+$，第二行为序列 $A = (a_1, \ldots, a_n)$。
+
+\noindent \textbf{输出}：\\
+若存在转移路径使得 $\forall i \leq n, |S_i| \geq 1$，则输出 $\max \text{Avg}(S_n)$ 的最简分数形式 $\frac{p}{q}$（需满足 $\gcd(p,q)=1$）；否则输出 -1。
+
+\subsubsection{解题思路}
+通过动态维护卡牌数量和攻击力总和，结合贪心策略确保事件序列可行并最大化平均攻击力。
+
+\begin{enumerate}
+    \item \textbf{预处理阶段（逆向扫描）}：
+    \begin{itemize}
+        \item 定义数组 \texttt{req\_min}，其中 \texttt{req\_min[i]} 表示处理完第 $i$ 个事件后所需的最小卡牌数
+        \item 初始化 \texttt{req\_min[n] = 1}（最终至少保留1张牌）
+        \item 逆向遍历事件序列，根据事件类型更新最小需求：
+        \begin{itemize}
+            \item 弃牌事件（$a_i = -1$）：至少需要 $\max(2, \texttt{req\_min[i+1]} + 1)$ 张牌
+            \item 拿牌事件（$a_i = 1$）：至少需要 $\max(1, \texttt{req\_min[i+1]} - 1)$ 张牌
+            \item 抽奖事件（$a_i = 0$）：取拿牌和弃牌需求的最小值
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{可行性判断}：
+    \begin{itemize}
+        \item 若初始需求 \texttt{req\_min[0] > 1}，说明无法完成所有事件，直接输出 $-1$
+    \end{itemize}
+
+    \item \textbf{正向处理阶段}：
+    \begin{itemize}
+        \item 初始化当前卡牌数 $k = 1$ 和攻击力总和 $S = 1$
+        \item 遍历事件序列动态更新状态：
+        \begin{itemize}
+            \item 拿牌事件：$k$ 和 $S$ 均增加 $1$
+            \item 弃牌事件：$k$ 减少 $1$（攻击力总和不变）
+            \item 抽奖事件：选择使 $k$ 尽可能小的操作（贪心策略）：
+            \begin{itemize}
+                \item 若 $k - 1 \geq \texttt{req\_min[i+1]}$ 则弃牌
+                \item 否则拿牌
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{结果计算}：
+    \begin{itemize}
+        \item 计算 $S$ 与 $k$ 的最大公约数 $g = \gcd(S, k)$
+        \item 输出最简分数形式 $\frac{S/g}{k/g}$
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{复杂度分析}
+时间复杂度 $O(n)$（预处理和正向处理各扫描一次）
+% \subsubsection{完整代码}
+% \begin{lstlisting}
+% #include <iostream>
+% #include <vector>
+% #include <algorithm>
+% using namespace std;
+
+% int gcd(int a, int b) {
+%     while (b != 0) {
+%         int temp = b;
+%         b = a % b;
+%         a = temp;
+%     }
+%     return a;
+% }
+
+% int main() {
+%     int n;
+%     scanf("%d", &n);
+%     vector<int> a(n);
+%     for (int i = 0; i < n; ++i) {
+%         scanf("%d", &a[i]);
+%     }
+    
+%     vector<int> req_min(n + 1);
+%     req_min[n] = 1;
+%     for (int i = n - 1; i >= 0; --i) {
+%         if (a[i] == -1) {
+%             req_min[i] = max(2, req_min[i + 1] + 1);
+%         } else if (a[i] == 1) {
+%             req_min[i] = max(1, req_min[i + 1] - 1);
+%         } else {
+%             int option1 = max(1, req_min[i + 1] - 1);
+%             int option2 = max(2, req_min[i + 1] + 1);
+%             req_min[i] = min(option1, option2);
+%         }
+%     }
+    
+%     if (req_min[0] > 1) {
+%         printf("-1\n");
+%         return 0;
+%     }
+    
+%     int k = 1;
+%     int S = 1;
+%     for (int i = 0; i < n; ++i) {
+%         if (a[i] == 1) {
+%             k++;
+%             S++;
+%         } else if (a[i] == -1) {
+%             k--;
+%         } else {
+%             if (k - 1 >= req_min[i + 1]) {
+%                 k--;
+%             } else {
+%                 k++;
+%                 S++;
+%             }
+%         }
+%     }
+    
+%     int g = gcd(S, k);
+%     printf("%d %d\n", S / g, k / g);
+%     return 0;
+% }
+% \end{lstlisting}
+\end{document}
