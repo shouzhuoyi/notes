@@ -1,9 +1,9 @@
 #set page(paper: "a4", margin: 3em)
 #import "@preview/numbly:0.1.0": numbly
 #import "@preview/thmbox:0.3.0": *
-#import "@preview/cuti:0.2.1": show-cn-fakebold
+#import "@preview/cuti:0.4.0": show-cn-fakebold
 #show: show-cn-fakebold
-#import "@preview/mitex:0.2.5": *
+#import "@preview/mitex:0.2.7": *
 
 #import "@preview/dvdtyp:1.0.1": *
 

@@ -2,7 +2,7 @@
 #import "@preview/dvdtyp:1.0.1"
 #import "@preview/numbly:0.1.0": numbly
 #import "@preview/thmbox:0.3.0": *
-#import "@preview/cuti:0.2.1": show-cn-fakebold
+#import "@preview/cuti:0.4.0": show-cn-fakebold
 #import "@preview/dvdtyp:1.0.1": *
 #show: dvdtyp.with(
   title: "计算理论导引笔记",
@@ -10,7 +10,7 @@
   author: "kiwiizzz&xhkzdepartedream",
 )
 #show: show-cn-fakebold
-#import "@preview/mitex:0.2.5": *
+#import "@preview/mitex:0.2.7": *
 #set text(font: ("New Computer Modern Sans", "FmlSong", "Family Song"))
 #show emph: text.with(font: ("New Computer Modern Sans", "STKaiti"))
 #show strong: text.with(font: ("New Computer Modern Sans", "STKaiti"))

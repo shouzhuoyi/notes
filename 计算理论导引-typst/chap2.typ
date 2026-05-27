@@ -1,9 +1,9 @@
 #set page(paper: "a4", margin: 3em)
 #import "@preview/numbly:0.1.0": numbly
 #import "@preview/thmbox:0.3.0": *
-#import "@preview/cuti:0.2.1": show-cn-fakebold
+#import "@preview/cuti:0.4.0": show-cn-fakebold
 #show: show-cn-fakebold
-#import "@preview/mitex:0.2.5": *
+#import "@preview/mitex:0.2.7": *
 //#set text(font: "Songti SC")
 //#show emph: text.with(font: ("STKaiti"))
 //#show smartquote: set text(font: "Libertinus Serif")
@@ -165,7 +165,7 @@ nobody cares.
 
 // 定义样式
 #let dot-style = (fill: black, radius: 0.000001)
-#import "@preview/cetz:0.4.1": canvas, draw
+#import "@preview/cetz:0.5.0": canvas, draw
 
 
 
